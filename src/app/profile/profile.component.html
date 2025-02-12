@@ -1,0 +1,112 @@
+<div class="content">
+    <div class="titre">
+        <img src="" alt="">
+        <h1>Profile</h1>
+    </div>
+    <div class="p-card w-100 p-4">
+        <div class="box-pp center">
+            <ul class="nav nav-tabs mt-2 w-100">
+                <li class="nav-item" (click)="setNav('ip')">
+                  <a class="nav-link {{etatI}}" aria-current="page">Information personnelle</a>
+                </li>
+                <li class="nav-item {{etatV}}" (click)="setNav('verif')">
+                  <a class="nav-link">Vérification</a>
+                </li>                
+            </ul>
+            @if(!option){
+                <div class="info-perso text-white p-4">
+                    @if (!nom || !prenom || !username || !email) {
+                        <div class="alert alert-danger" role="alert">
+                            Vous devez mettre vos informations à jour.
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label">Nom <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="nom">
+                        </div>
+                        <div class="col mb-3">
+                            <label class="form-label">Prenom <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="prenom">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label">Nom d'utilisateur <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="username">
+                        </div>
+                        <div class="col mb-3">
+                            <label class="form-label" disabled>Adresse Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" [(ngModel)]="email">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label">telephone<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="tel">
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="saisir votre adresse" style="height: 100px" [(ngModel)]="adresse"></textarea>
+                        <label class="form-label text-dark">Votre adresse</label>
+                    </div>
+                    <button class="btn btn-primary w-100" (click)="updateProf()" [disabled]="isUpdating">
+                        Mettre à jour
+                        @if (isUpdating) {
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        }
+                    </button>
+                </div>
+            }
+            @if(option){
+                <div class="info-perso text-white p-4">
+                    @if (!nom || !prenom || !username || !email) {
+                        <div class="alert alert-danger" role="alert">
+                            Vous devez mettre vos informations à jour.
+                        </div>
+                    }
+                    <div class="row">   
+                        <div class="col mb-3">
+                            <label class="form-label">Nom <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="nom">
+                        </div>
+                        <div class="col mb-3">
+                            <label class="form-label">Prenom <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="prenom">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label">numéro de la pièce d'identité <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="idPiece">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Selfie <span class="text-danger">*</span></label>
+                            <input class="form-control" type="file" [(ngModel)]="selfie">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3">
+                            <label class="form-label">image recto de la pièce d'identité(passport, CNI, permis de conduire)<span class="text-danger">*</span></label>
+                            <input class="form-control" type="file" [(ngModel)]="rectoId">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">image verseau de la pièce d'identité(passport, CNI, permis de conduire)<span class="text-danger">*</span></label>
+                            <input class="form-control" type="file" [(ngModel)]="verseauId">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-100" (click)="sendToVerif()" [disabled]="isUpdating">
+                        Envoyer
+                        @if (isUpdating) {
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        }
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

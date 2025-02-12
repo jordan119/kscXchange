@@ -1,0 +1,344 @@
+<div class="content">
+    <div class="titre mb-4">
+        <div class="text-center ww-x">
+            <h3><i class="bi bi-gift-fill text-success mx-4"></i> <span class="text-warning">Profitez</span> <span> de nos tarifs exceptionnels</span></h3>
+            <h1>Échange de devises fiable et sécurisé</h1>
+            <p class="w-50 text-center w-100">Négociez le yuan chinois, l'USD, l'EURO, le NAIRA, le XOF, le XAF, le GHS et tous les types de devises électroniques en utilisant notre plateforme de trading.</p>
+            <button class="btn btn-info" (click)="goTo('dash')">Commencer</button>
+        </div>
+    </div>
+    <div class="p-4 center" id="transfert">
+        <div class="card card-change">
+            <div class="card-body border-0">
+                @if (errChange !="" ) {
+                    <div class="alert alert-primary" role="alert">
+                        {{errChange}}
+                    </div>
+                }
+                <table class="table border-0 table-dark table-striped">
+                    <thead class="border-0">
+                        <tr class="text-center">
+                        <th scope="col">Envoyer</th>
+                        <th scope="col">Recevoir</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-0">
+                        <tr>
+                            <td>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" value="0" [(ngModel)]="montantSend" (input)="applyTaux()">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" value="0" [(ngModel)]="montantRec" disabled>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="col-sm-10">
+                                    <select class="form-select" [(ngModel)]="opSend" (change)="applyTaux()">
+                                        @for (monaie of monaies; track $index) {
+                                            <option value="{{monaie.id}}">{{monaie.operateur+'('+monaie.pays+')'}}</option>
+                                        } 
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-sm-10">
+                                    <select class="form-select" [(ngModel)]="opRe" (change)="applyTaux()">
+                                        @for (monaie of monaies; track $index) {
+                                            <option value="{{monaie.id}}">{{monaie.operateur+'('+monaie.pays+')'}}</option>
+                                        }                                        
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="p-2 text-white">
+                    @if (monaieR && tauxApplicable && monaieR) {
+                        <h4>1 {{monaieS}} = {{tauxApplicable}}</h4>
+                    }@else {
+                        <div class="spinner-grow text-info" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    }                        
+                </div>
+                <!--
+                    <div class="around">
+                        <div><img src="https://seeklogo.com/images/O/orange-money-logo-8F2AED308D-seeklogo.com.png" class="logo-currency"></div>
+                        <div><img src="https://cdn4.iconfinder.com/data/icons/finance-174/128/arrows_left_exchange_right_finace_money_business_seo-512.png" class="logo-currency"></div>
+                        <div><img src="https://seeklogo.com/images/O/orange-money-logo-8F2AED308D-seeklogo.com.png" class="logo-currency"></div>
+                    </div>
+                -->
+            </div>
+            <div class="card-footer border-0">
+                <button class="btn btn-warning w-100"(click)="swapp()">Swapp currency</button>
+            </div>
+        </div>
+    </div>
+    <div class="second p-4 text-light">
+        <div class="text-center">
+            <h3 class="text-warning">Processus</h3>
+            <h1>Comment ca marche?</h1>
+            <p>Sélectionnez ce que vous avez (Envoyer) et sélectionnez l'autre devise dont vous avez besoin en échange (Recevoir).</p>
+        </div>
+        
+        <div class="w-100 process">
+            <div class="card bg-dark shadow-lg">
+                <h2 class="text-warning">Gagnez de l'argent</h2>
+                <p class="text-light">
+                    Gagnez de l'argent en recommandant à davantage de clients d'utiliser nos services en partageant votre lien de parrainage.
+                </p>
+            </div>
+            <div class="card bg-dark shadow-lg">
+                <h2 class="text-warning">Commencez le transfert</h2>
+                <p class="text-light">
+                    Commencez à trader avec votre devise locale.
+                </p>
+            </div>
+            <div class="card bg-dark shadow-lg">
+                <h2 class="text-warning">Devise de dépôt</h2>
+                <p class="text-light">
+                    Make payment to the provided account.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="third p-4 text-center text-light">
+        <div class="text-center">
+            <h3 class="text-warning">En savoir plus</h3>
+            <h2>A propos de Nous</h2>
+            <p>Notre mission et notre vision sont de fournir à nos utilisateurs la meilleure expérience de change possible.</p>   
+        </div>
+        
+        <div class="container-about center">
+            
+            <div class="l">
+                <p class="text-center">
+                    Bienvenue à kscXchange, votre source de confiance pour les services de change mondiaux. Nous sommes une équipe d’experts en devises expérimentés et compétents qui se consacrent à vous aider à tirer le meilleur parti de votre argent. Que vous cherchiez à acheter, vendre ou simplement échanger des devises, nous avons les solutions adaptées à vos besoins.
+                    Chez kscXchange, nous comprenons que le taux de change fluctue quotidiennement, nous veillons donc à surveiller le marché pour que vous n'ayez pas à le faire. Notre équipe d’experts en devises est disponible pour fournir un service client exceptionnel et des conseils adaptés à votre situation individuelle. Avec nous, vous pouvez toujours compter sur d’excellents tarifs et un service rapide et efficace.
+                    Nous proposons une large gamme de devises, notamment le Yuan, l'USD, l'Euro, le Naira, le XOF, le GBP, l'IDR, d'autres monnaies électroniques telles que Paypal, PerfectMoney Usdt, et nous en ajoutons toujours d'autres. Notre objectif est d'offrir à nos clients la meilleure expérience de change possible.
+                    Merci d'avoir choisi kscXchange ! Au plaisir de vous servir !
+                </p>
+                <button class="btn btn-info">Commencer</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="four p-4 text-light mt-4">
+        <div class="text-center">
+            <h3 class="text-warning">Transfert</h3>
+            <h1>Nos derniers transferts</h1>
+            <p>Voici les tranfers les plus recent!</p>
+        </div>
+        
+        <table class="table table-warning table-striped  mt-4">
+            <thead >
+                <tr class="tete-tab">
+                    <th scope="col">#</th>
+                    <th scope="col">Envoyer</th>
+                    <th scope="col">Recevoir</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (transfert of transferts; track $index) {
+                    <tr>
+                        <th scope="row">{{transfert.num}}</th>
+                        <td>{{transfert.amount+" "+transfert.monaieSender}}</td>
+                        <td>{{transfert.amountR+" "+transfert.monaieRecepteur}}</td>
+                        
+                        <td><span class="badge bg-success">Success</span></td>                    
+                    </tr>
+                }
+                
+                
+            </tbody>
+        </table>
+    </div>
+
+    <div class="p-4 text-light mt-4">
+        <div class="text-center">
+            <h3 class="text-warning">FaQs</h3>
+            <h1>Questions fréquentes</h1>
+            <p>Qu’aimerez-vous savoir ? Obtenez quelques réponses ci-dessous !</p>
+        </div>
+        <div class="container-about center">
+            <div class="accordion my-4" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Puis-je utiliser le compte d'une autre personne pour effectuer des paiements ou des dépôts sur votre plateforme 
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            Gardez toujours cela à l’esprit, nous n’acceptons aucun tiers sur aucun de nos comptes, votre nom sur notre plateforme doit correspondre au nom que vous utilisez pour nous envoyer de l’argent.
+                            Mais nous pouvons vous aider à payer/approvisionner un autre compte en votre nom, cela ne va pas à l'encontre de nos conditions de services. Par exemple, nous pouvons financer le compte de votre (vos) fournisseur(s) s'il ne figure pas à votre nom. Vous avez encore besoin de précisions supplémentaires, contactez-nous au support en direct ou par courrier.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Êtes-vous disponible pour répondre aux questions à tout moment ?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <p>
+                                Nous fournissons une assistance 24h/24 et 7j/7 et une mise à jour rapide de vos transactions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Quel est le processus pour connaître l'équivalent d'une devise dans une autre ?
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <p>
+                                Le taux est calculé en fonction des mouvements du marché, utilisez le calculateur de swap de devises pour vérifier le taux en sélectionnant votre devise d'envoi et votre devise de réception, tapez le montant que vous souhaitez échanger, le calculateur vous donnera l'équivalent dans une autre devise. Ne vous inquiétez pas, nous mettons à jour les tarifs de temps en temps pour vous offrir le meilleur tarif jamais vu.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="p-4 text-light">
+        <div class="text-center">
+            <h3 class="text-warning">AVIS</h3>
+            <h1>Que disent nos clients?</h1>
+            <p>Aimez-vous ce que vous voyez ? Un essai vous épatera sûrement !</p>
+        </div>
+        
+        <div class="container-avis mt-4">
+            <div class="card bg-dark p-4 text-light shadow-lg">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">MASSOH</h5>
+                    <small>3 days ago</small>
+                </div>
+                <div><span class="text-info">Custumer</span></div>
+                
+                <p class="mb-1">J'adore ce service. Vous etes efficace et le service client est juste wahouu.</p>
+                <div class="note d-flex">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-white"></i>
+                </div>
+            </div>
+            <div class="card bg-dark p-4 text-light shadow-lg">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">MASSOH</h5>
+                    <small>3 days ago</small>
+                </div>
+                <div><span class="text-info">Custumer</span></div>
+                
+                <p class="mb-1">J'adore ce service. Vous etes efficace et le service client est juste wahouu.</p>
+                <div class="note d-flex">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-white"></i>
+                </div>
+            </div>
+            <div class="card bg-dark p-4 text-light shadow-lg">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">MASSOH</h5>
+                    <small>3 days ago</small>
+                </div>
+                <div><span class="text-info">Custumer</span></div>
+                
+                <p class="mb-1">J'adore ce service. Vous etes efficace et le service client est juste wahouu.</p>
+                <div class="note d-flex">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-white"></i>
+                    <i class="bi bi-star-fill text-white"></i>
+                    <i class="bi bi-star-fill text-white"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="message center flex-column" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <div class="fs-1 center text-info position-relative">
+            <i class="bi bi-chat-dots-fill"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-small">
+                {{messages.length}}
+                <span class="visually-hidden">unread messages</span>
+            </span>
+        </div>        
+    </div>
+</div>
+<div class="modal modal-xl fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header bg-info">
+            <h5 class="modal-title" id="staticBackdropLabel">Hello! besoin d'aide? Discutons 😃</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body position-relative bg-dark">
+            @if (idUser) {
+                <div class="receiver">
+                    <div class="msg-box">
+                        HI. Comment pouvons nous vous aider?
+                    </div>
+                    
+                </div>
+                @if (messages.length ==0) {
+                    
+                }@else {
+                    @for (msg of messages; track $index) {
+                        @if (msg.admin) {
+                            <div class="receiver">
+                                <div class="msg-box">
+                                    {{msg.message}}
+                                </div>
+                                
+                            </div>
+                        }@else {
+                            <div class="sender">
+                                
+                                <div class="msg-box">
+                                    {{msg.message}}
+                                </div>
+                            </div>
+                        }
+                        
+                        
+                    }
+                    
+                }
+                
+            }@else {
+                <div class="w-100 p-5 text-white">
+                    <h2>Vous devez créer un compte avant de lancer la discussion.</h2>
+                    <button class="btn btn-success" (click)="goTo('inscription')" data-bs-dismiss="modal">S'inscrire maintenant</button>
+                </div>
+            }
+            
+        </div>
+        <div class="modal-footer w-100">
+            <div class="msb-reply w-100 position-relative">
+                <textarea placeholder="What's on your mind..." [(ngModel)]="msg"></textarea>
+                <button class="btn btn-success" (click)="sendMsg()" [disabled]="!hasUser"><i class="bi bi-send-fill"></i></button>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

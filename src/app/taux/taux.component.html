@@ -1,0 +1,28 @@
+<div class="content">
+    <div class="titre">
+        <h1>Taux de change</h1>
+    </div>
+    <div class="my-4 p-4">
+        <table class="table table-dark table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Devise</th>
+                <th scope="col">Taux de vente</th>
+                <th scope="col">Taux d'achat</th>
+              </tr>
+            </thead>
+            <tbody>
+                @for (rate of CurrencyRate; track $index) {
+                    <tr>
+                        <td>{{ rate.slNo }}</td>
+                        <td>{{ rate.currency }}</td>
+                        <td>{{ rate.sellRate }}</td>
+                        <td>{{ rate.buyRate }}</td>
+                    </tr>
+                }
+                
+            </tbody>
+          </table>
+    </div>
+</div>

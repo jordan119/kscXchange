@@ -1,0 +1,44 @@
+<div class="content">
+    <div class="titre">
+        <h1>Connectez Vous</h1>
+    </div>
+    <div class="p-4 content-connect">
+        <div class="grid align__item">
+
+            <div class="register">
+        
+                <svg xmlns="http://www.w3.org/2000/svg" class="site__logo " width="56" height="84" viewBox="77.7 214.9 274.7 412"><defs><linearGradient id="a" x1="0%" y1="0%" y2="0%"><stop offset="0%" stop-color="#8ceabb"/><stop offset="100%" stop-color="#378f7b"/></linearGradient></defs><path fill="url(#a)" d="M215 214.9c-83.6 123.5-137.3 200.8-137.3 275.9 0 75.2 61.4 136.1 137.3 136.1s137.3-60.9 137.3-136.1c0-75.1-53.7-152.4-137.3-275.9z"/></svg>
+            
+                <h2>Connection</h2>
+                <div class="alert {{colorAlert}} mt-2" role="alert">
+                    {{messageAlert}}
+                </div>
+                <div class="form">
+                    
+                    <div class="form__field">
+                        <input type="email" placeholder="info@mailaddress.com" [(ngModel)] ="email">
+                    </div>
+            
+                    <div class="form__field">
+                        <input type="password" placeholder="••••••••••••" [(ngModel)] ="password">
+                    </div>
+                    <a class="text-warning mb-2">Mot de passe oublié?</a>
+
+                    <div class="form__field">
+                        <input type="button" value="Connection" (click)="connect()" [ngClass]="{'disabled': loading}">
+                        @if(loading){
+                            <div class="spinner-border spinner-border-sm mx-1 text-warning" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                        }
+                    </div>
+                    
+                </div>
+            
+                <p class="text-white" >Vous n'avez pas de compte? <a (click)="goTo('inscription')" class="text-info">Inscrivez vous vous</a></p>
+            
+            </div>
+        
+        </div>
+    </div>
+</div>

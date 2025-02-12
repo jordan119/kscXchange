@@ -1,0 +1,347 @@
+.content{
+    background-color:  #12222b;
+    padding-bottom: 300px ;
+    min-height: 100vh;
+    position: relative;
+}
+.titre{
+    background-color:  #e3f2fd;
+    width: 100%;
+    min-height: 40vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.ww-x{
+    width: 80%;
+}
+.table{
+    box-shadow: 0 0 250px #000;
+    border-radius: 10px;
+}
+.card-change{
+    width: 60%;
+    box-shadow: 0 0 250px #000;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: transparent;
+}
+table{
+    background: transparent;
+    border: none;
+}
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.first{
+    background-color:  #e3f2fd;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 40%;
+}
+.logo-currency{
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+.around{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+}
+.img-back{
+    width: 80%;
+    
+}
+.center{
+    display: flex;
+    justify-content: center;
+    
+    align-items: center;
+}
+.flex-column{
+    flex-direction: column;
+}
+.process{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 2rem;
+    flex-wrap: wrap;
+    .card{
+        width: 350px;
+        min-height: 180px;
+        transition: all ease-in-out .3s;
+        cursor: pointer;
+        padding: 2rem;
+        margin: .8rem;
+    }
+
+    .card:hover{
+        transform: scale(1.1);
+    }
+}
+.four{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    table{
+        width: 80%;
+    }
+}
+.container-about{
+    p{
+        text-align: justify;
+    }
+    .l{
+        width: 80%;
+    }
+    .accordion{
+        width: 80%;
+    }
+}
+.text-small{
+    font-size: 15px;
+}
+.container-faq{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 70vh;
+    .l{
+        width: 50%;
+    }
+    .r{
+        width: 35%;
+    }
+    img{
+        width: 400px;
+        height: 400px;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+}
+.container-avis{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+    .card{
+        width: 300px;
+        min-height: 200px;
+    }
+    p{
+        color: #bbbbbb;
+    }
+}
+.message{
+    cursor: pointer;
+    position: fixed;
+    top: 80vh;
+    right: 2rem;
+    padding: .2rem;
+    width: 5rem;
+    height: 5rem;
+    background: rgba(237, 239, 240, 0.1);
+    transition: .5s all ease-in-out;
+    border-radius: 10px;
+}
+
+.message:hover{
+    transform: scale(1.1);
+}
+.modal-body{
+    height: 70vh;
+    overflow-y: auto;
+}
+.receiver{
+    display: flex;
+    margin: 1rem 0rem;
+    cursor: pointer;
+    .logo-person{
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: #bbbbbb;
+    }
+    .msg-box{
+        background: #bbbbbb;
+        max-width: 80%;
+        padding: .5rem;
+        border-radius: 10px;
+        margin-left: 1rem;
+        margin-bottom: .5rem;
+    }
+}
+.sender{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    cursor: pointer;
+    .logo-person{
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: #bbbbbb;
+    }
+    .msg-box{
+        background: #bbbbbb;
+        max-width: 80%;
+        padding: .5rem;
+        border-radius: 10px;
+        margin-right: 1rem;
+        margin-bottom: .5rem;
+    }
+}
+.msb-reply {
+    display: flex;
+    
+}
+.msb-reply textarea {
+    width: 100%;
+    font-size: 13px;
+    border: 0;
+    padding: 10px 15px;
+    resize: none;
+    height: 60px;
+    background: 0 0;
+}
+
+
+
+/* Pour les écrans de moins de 768px (tablettes et téléphones) */
+@media (max-width: 768px) {
+    .ww-x{
+        width: 80%;
+    }
+    .table{
+        box-shadow: 0 0 250px #000;
+        border-radius: 10px;
+    }
+    .card-change{
+        width: 95%;
+        box-shadow: 0 0 250px #000;
+        text-align: center;
+        padding: 1rem;
+        background: transparent;
+    }
+    table{
+        background: transparent;
+        border: none;
+    }
+    .center{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .first{
+        background-color:  #e3f2fd;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        width: 40%;
+    }
+    .logo-currency{
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+    .around{
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        
+    }
+    .img-back{
+        width: 80%;
+        
+    }
+    .center{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .process{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 2rem;
+        flex-wrap: wrap;
+        .card{
+            width: 350px;
+            min-height: 180px;
+            transition: all ease-in-out .3s;
+            cursor: pointer;
+            padding: 2rem;
+            margin: .8rem;
+        }
+    
+        .card:hover{
+            transform: scale(1.1);
+        }
+    }
+    .four{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        table{
+            width: 80%;
+        }
+    }
+    .container-about{
+        p{
+            text-align: justify;
+        }
+        .l{
+            width: 90%;
+        }
+        .accordion{
+            width: 90%;
+        }
+    }
+    .container-faq{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        min-height: 70vh;
+        .l{
+            width: 90%;
+        }
+        .r{
+            width: 35%;
+        }
+        img{
+            width: 400px;
+            height: 400px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+    }
+    .container-avis{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+        .card{
+            width: 80%;
+            height: auto;
+            margin: 1rem;
+        }
+        p{
+            color: #bbbbbb;
+        }
+    }
+}

@@ -1,0 +1,29 @@
+.content{
+    background-color:  #12222b;
+    min-height: 100vh;
+    padding-bottom: 500px ;
+    
+}
+.titre{
+    background-color:  #e3f2fd;
+    width: 100%;
+    min-height: 30vh;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.nav-item{
+    cursor: pointer;
+}
+.box-pp{
+    width: 100%;
+}
+.info-perso{
+    width: 60%;
+}

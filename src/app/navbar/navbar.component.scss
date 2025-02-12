@@ -1,0 +1,43 @@
+
+nav{
+    height: 60px;
+}
+.img-logo{
+    width: 4rem;
+    height: 40px;
+    object-fit: contain;
+}
+
+.nav-link{
+    color: rgb(1, 96, 112);
+    font-weight: bold;
+    cursor: pointer;
+}
+.nav-link.active{
+    color: rgb(30, 28, 46);
+}
+.navbar-nav{
+    display: flex;
+    justify-content: right;
+}
+.nav-item{
+    margin: 0 2rem;
+}
+.btn-connect{
+    width: 2rem;
+    height: 2rem;
+    padding: 0.2rem;
+    border-radius: 50%;
+    text-transform: capitalize;
+    background-color:rgb(30, 28, 46);
+    color: white;
+    font-size: 14px;
+    border: none;
+    transition: all 0.3s ease-in-out;
+}
+.btn-connect:hover{
+    background-color: rgb(19, 90, 19);
+}
+@media screen and (max-width: 650px) {
+    
+}   

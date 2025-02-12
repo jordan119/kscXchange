@@ -1,0 +1,180 @@
+.content{
+    background-color:  #12222b;
+    min-height: 100vh;
+    padding-bottom: 300px ;
+    position: relative;
+}
+.titre{
+    background-color:  #e3f2fd;
+    width: 100%;
+    min-height: 40vh;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+.text-sm{
+    font-size: 12px;
+}
+.option{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    flex-wrap: wrap;
+    .card{
+        width: 300px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: .3s all ease-in-out;
+        margin: 2rem;
+        .btnOp{
+            justify-content: space-between;
+        }
+    }
+    .card:hover{
+        transform: scale(1.1);
+    }
+}
+.center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.message{
+    cursor: pointer;
+    position: fixed;
+    top: 80vh;
+    right: 2rem;
+    padding: .2rem;
+    width: 5rem;
+    height: 5rem;
+    background: rgba(237, 239, 240, 0.1);
+    transition: .5s all ease-in-out;
+    border-radius: 10px;
+}
+
+.message:hover{
+    transform: scale(1.1);
+}
+.modal-body-msg{
+    min-height: 50vh;
+    display: flex;
+}
+.msg-box-contain{
+    height: 75%;
+    overflow: auto;
+}
+.sender{
+    display: flex;
+    margin: .5rem 0rem;    
+    cursor: pointer;
+    
+    .msg-box{
+        background: #7c7c7c;        
+        max-width: 80%;
+        padding: .5rem;
+        border-radius: 10px;
+        margin: .2rem;
+        color: white;
+    }
+}
+.receiver{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    cursor: pointer;
+    
+    .msg-box{
+        background: #222222;
+        max-width: 80%;
+        padding: .5rem;
+        border-radius: 10px;
+        margin-right: 1rem;
+        margin: .2rem;
+        color: white;
+    }
+}
+.msb-reply {
+    display: flex;
+    
+}
+.msb-reply textarea {
+    width: 100%;
+    font-size: 13px;
+    border: 0;
+    padding: 10px 15px;
+    resize: none;
+    height: 60px;
+    background: 0 0;
+}
+
+.msg-list{
+    .modal-body{
+        display: flex;
+        background: rgb(195, 255, 255, .3);
+        min-height: 90vh;
+    }
+    .list{
+        width: 35%;
+        height: 95%;
+        overflow: auto;
+    }
+    .list-group{
+        li{
+            list-style: none;
+            transition: all ease-in-out .2s;            
+        }
+        li:hover{
+            background: rgba(149, 224, 224, 0.3);
+        }
+        .contain{
+            padding: .5rem;
+            border-bottom:  1px solid rgb(20, 110, 161, .2);
+            cursor: pointer;
+            margin-top: 10px;
+            margin-left: 20px;
+            
+            .tete{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .heure{
+                    font-size: 11px;
+                }
+                .nom{
+                    font-weight: bold;
+                }
+            }
+            p{
+                font-size: 11px;
+                margin: 0;
+                padding: 0;
+                margin-left: .3rem;
+            }
+        }
+    }
+    .logo{
+        width: 3rem; height: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #1c5743;
+        color: #e3f2fd;
+        border-radius: 50%;
+    }
+
+    .body-msg{
+        width: 65%;
+        padding: 0;
+        
+        border-left: 1px solid rgb(20, 110, 161, .2);
+        position: relative;
+
+        .footer{
+            position: absolute;
+            bottom: 2px;
+        }
+    }
+}

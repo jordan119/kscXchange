@@ -1,0 +1,24 @@
+.content{
+    padding-bottom: 300px ;
+    background-color:  #12222b;
+    min-height: 100vh;
+}
+.titre{
+    background-color:  #e3f2fd;
+    width: 100%;
+    min-height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .titre{
+        background-color:  #e3f2fd;
+        width: 100%;
+        min-height: 20vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

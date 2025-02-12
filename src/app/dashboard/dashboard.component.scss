@@ -1,0 +1,73 @@
+.content{
+    background-color:  #12222b;
+    min-height: 100vh;
+    padding-bottom: 300px ;
+}
+.titre{
+    background-color:  #e3f2fd;
+    width: 100%;
+    min-height: 30vh;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+} 
+.card-change{
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    background: transparent;
+    background: #def1fc;
+}
+.logo-currency{
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+.around{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+}
+
+.log{
+    background-color: white;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+}
+.option-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    .card-dash{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-right: 2rem;
+    }
+
+    .card{
+        width: 500px;
+        height: 150px;
+        margin: 2rem;
+        transition: .5s all ease-in-out;
+        border-radius: 10px;
+        cursor: pointer;
+        -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    }
+    .card:hover{
+        transform: scale(1.1);
+    }
+}
+
