@@ -16,14 +16,16 @@ import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 import { HammerModule } from '@angular/platform-browser';
 
 const firebaseConfig =  {
-  apiKey: "AIzaSyC9zqi7yxliobvsBqJOZQUzlPbBLnXgEqE",
-  authDomain: "kscxchange-f9e5a.firebaseapp.com",
-  projectId: "kscxchange-f9e5a",
-  storageBucket: "kscxchange-f9e5a.firebasestorage.app",
-  messagingSenderId: "347996611117",
-  appId: "1:347996611117:web:5652e5ba403fcc34248ea4",
-  measurementId: "G-EWZ5QYQ5R7"
+  apiKey: "AIzaSyD0O8kEPksH36N-EKPhUz_idXLvj6FFwKU",
+  authDomain: "kscxchange-a703c.firebaseapp.com",
+  projectId: "kscxchange-a703c",
+  storageBucket: "kscxchange-a703c.firebasestorage.app",
+  messagingSenderId: "651848678215",
+  appId: "1:651848678215:web:8e8471212f0fff6636aa62",
+  measurementId: "G-5DQPQV2DNF"
 }
+
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),

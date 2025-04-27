@@ -1,105 +1,118 @@
-.content{
-    background-color:  #12222b;
+.content {
+    background-color: #12222b;
     min-height: 100vh;
-    padding-bottom: 300px ;
+    padding-bottom: 300px;
     position: relative;
 }
-.titre{
-    background-color:  #e3f2fd;
+
+.titre {
+    background-color: #e3f2fd;
     width: 100%;
     min-height: 40vh;
-    display: flex; 
+    display: flex;
     justify-content: center;
     align-items: center;
 }
-.text-sm{
+
+.text-sm {
     font-size: 12px;
 }
-.option{
+
+.option {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 2rem;
     flex-wrap: wrap;
-    .card{
+
+    .card {
         width: 300px;
         border-radius: 10px;
         cursor: pointer;
-        transition: .3s all ease-in-out;
+        transition: 0.3s all ease-in-out;
         margin: 2rem;
-        .btnOp{
+
+        .btnOp {
             justify-content: space-between;
         }
     }
-    .card:hover{
+
+    .card:hover {
         transform: scale(1.1);
     }
 }
-.center{
+
+.center {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-.message{
+
+.message {
     cursor: pointer;
     position: fixed;
     top: 80vh;
     right: 2rem;
-    padding: .2rem;
+    padding: 0.2rem;
     width: 5rem;
     height: 5rem;
     background: rgba(237, 239, 240, 0.1);
-    transition: .5s all ease-in-out;
+    transition: 0.5s all ease-in-out;
     border-radius: 10px;
 }
 
-.message:hover{
+.message:hover {
     transform: scale(1.1);
 }
-.modal-body-msg{
-    min-height: 50vh;
+
+.modal-body-msg {
     display: flex;
 }
-.msg-box-contain{
-    height: 75%;
+
+.msg-box-contain {
     overflow: auto;
 }
-.sender{
+.modal-content{
+    min-height: 100%
+}
+.sender {
     display: flex;
-    margin: .5rem 0rem;    
+    margin: 0.5rem 0rem;
     cursor: pointer;
-    
-    .msg-box{
-        background: #7c7c7c;        
-        max-width: 80%;
-        padding: .5rem;
-        border-radius: 10px;
-        margin: .2rem;
-        color: white;
+
+    .msg-box {
+    background: #7c7c7c;
+    max-width: 80%;
+    padding: 0.5rem;
+    border-radius: 10px;
+    margin: 0.2rem;
+    color: white;
     }
 }
-.receiver{
+
+.receiver {
     display: flex;
     width: 100%;
     justify-content: flex-end;
     cursor: pointer;
-    
-    .msg-box{
-        background: #222222;
-        max-width: 80%;
-        padding: .5rem;
-        border-radius: 10px;
-        margin-right: 1rem;
-        margin: .2rem;
-        color: white;
+
+    .msg-box {
+    background: #222222;
+    max-width: 80%;
+    padding: 0.5rem;
+    border-radius: 10px;
+    margin-right: 1rem;
+    margin: 0.2rem;
+    color: white;
     }
 }
+
 .msb-reply {
     display: flex;
-    
 }
+
 .msb-reply textarea {
     width: 100%;
     font-size: 13px;
@@ -110,53 +123,62 @@
     background: 0 0;
 }
 
-.msg-list{
-    .modal-body{
+.msg-list {
+    min-height: 90vh;
+    .modal-body {
         display: flex;
-        background: rgb(195, 255, 255, .3);
-        min-height: 90vh;
+        background: rgba(195, 255, 255, 0.3);
     }
-    .list{
+
+    .list {
         width: 35%;
-        height: 95%;
+        height: auto;
         overflow: auto;
     }
-    .list-group{
-        li{
+
+    .list-group {
+        li {
             list-style: none;
-            transition: all ease-in-out .2s;            
+            transition: all ease-in-out 0.2s;
         }
-        li:hover{
+
+        li:hover {
             background: rgba(149, 224, 224, 0.3);
         }
-        .contain{
-            padding: .5rem;
-            border-bottom:  1px solid rgb(20, 110, 161, .2);
+
+        .contain {
+            padding: 0.5rem;
+            border-bottom: 1px solid rgba(20, 110, 161, 0.2);
             cursor: pointer;
             margin-top: 10px;
             margin-left: 20px;
-            
-            .tete{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                .heure{
-                    font-size: 11px;
-                }
-                .nom{
-                    font-weight: bold;
-                }
-            }
-            p{
+
+            .tete {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .heure {
                 font-size: 11px;
-                margin: 0;
-                padding: 0;
-                margin-left: .3rem;
+            }
+
+            .nom {
+                font-weight: bold;
+            }
+            }
+
+            p {
+            font-size: 11px;
+            margin: 0;
+            padding: 0;
+            margin-left: 0.3rem;
             }
         }
     }
-    .logo{
-        width: 3rem; height: 3rem;
+
+    .logo {
+        width: 3rem;
+        height: 3rem;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -165,16 +187,172 @@
         border-radius: 50%;
     }
 
-    .body-msg{
+    .body-msg {
         width: 65%;
         padding: 0;
-        
-        border-left: 1px solid rgb(20, 110, 161, .2);
+        border-left: 1px solid rgba(20, 110, 161, 0.2);
         position: relative;
 
-        .footer{
+        .footer {
             position: absolute;
             bottom: 2px;
         }
     }
+}
+.t-contain{
+    padding: 1rem;
+    width: 100%;
+}
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.search-input {
+    border-radius: 20px 0 0 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 70%;
+}
+.search-button {
+    border-radius: 0 20px 20px 0;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.search-button:hover {
+    background-color: #e2e6ea;
+}
+
+
+/* Pour les écrans de moins de 768px (tablettes et téléphones) */
+@media (max-width: 768px) {
+    .content {
+        padding-bottom: 300px;
+    }
+
+    .titre {
+        
+        min-height: 20vh;
+        font-size: 1.5rem;
+        h1{
+            margin: 1rem;
+            text-align: center;
+        }
+    }
+
+    .option {
+    flex-direction: column;
+    padding: 1rem;
+
+    .card {
+        width: 90%;
+        margin: 1rem 0;
+    }
+    }
+
+    .message {
+    width: 4rem;
+    height: 4rem;
+    right: 1rem;
+    top: 85vh;
+    }
+
+    .modal-body-msg {
+    min-height: 40vh;
+    }
+
+    .msg-box-contain {
+    height: auto;
+    }
+
+    .sender,
+    .receiver {
+    .msg-box {
+        max-width: 90%;
+        padding: 0.3rem;
+    }
+    }
+
+    .msb-reply textarea {
+    height: 50px;
+    padding: 5px 10px;
+    }
+
+    .msg-list {
+    .modal-body {
+        flex-direction: column;
+        min-height: 60vh;
+    }
+
+    .list {
+        width: 100%;
+        height: auto;
+    }
+
+    .body-msg {
+        width: 100%;
+        padding: 0;
+        border-left: none;
+    }
+    }
+
+    .table-responsive {
+    overflow-x: auto;
+    }
+
+    table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    }
+
+    th,
+    td {
+    white-space: nowrap;
+    }
+    .t-contain{
+        padding: .1rem;
+        width: 100%;
+    }
+    .search-input {
+        border-radius: 20px 0 0 20px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+  .modal-dialog {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .body-msg {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+  }
+
+  .body-msg.active {
+    display: flex;
+  }
+
+  .list-group li {
+    cursor: pointer;
+  }
 }

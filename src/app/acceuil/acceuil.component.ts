@@ -1,14 +1,16 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormsModule } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-acceuil',
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
+    CommonModule
   ],
   templateUrl: './acceuil.component.html',
   styleUrl: './acceuil.component.scss'
@@ -22,6 +24,8 @@ export class AcceuilComponent implements OnInit {
   ngOnInit(): void {
     this.getMonaie()
     this.getAuth()
+    this.getFaqs()
+    this.getTransfert()
   }
 
   constructor( 
@@ -36,21 +40,37 @@ export class AcceuilComponent implements OnInit {
   opSend: any
   opRe: any
   monaies: any = []
-  async getMonaie(){
+  async getMonaie() {
     this.firestore.collection('devises').get().subscribe(monaies => {
-      this.monaies= []
-      monaies.forEach((monaie: any) => {   
-        this.monaies.push({
-          id: monaie.id,
-          monaie: monaie.data()['monaie'],
-          pays: monaie.data()['pays'],
-          operateur: monaie.data()['operateur'],
-          
-        })    
-      })
-      console.log(this.monaies)
-    })
+      this.monaies = [];
+      const promises: any = [];
+  
+      monaies.forEach((monaie: any) => {
+        const data = monaie.data();
+        if (data['typeMonaie'] !== undefined && data['priorite'] !== undefined) {
+          const promise = new Promise<void>((resolve) => {
+            this.monaies.push({
+              id: monaie.id,
+              monaie: data['monaie'],
+              pays: data['pays'],
+              operateur: data['operateur'],
+              logo: data['logo'],
+              typeMonaie: data['typeMonaie'],
+              priorite: data['priorite']
+            });
+            resolve();
+          });
+          promises.push(promise);
+        }
+      });
+  
+      Promise.all(promises).then(() => {
+        // Trier les devises par priorité après avoir ajouté toutes les devises au tableau
+        this.monaies.sort((a: any, b: any) => a.priorite - b.priorite);
+      });
+    });
   }
+  
 
   idUser: any; nom: any; hasUser = false
   getAuth(){
@@ -60,7 +80,6 @@ export class AcceuilComponent implements OnInit {
       }else{
         this.idUser = auth?.uid 
         this.hasUser = true
-        this.getTransfert()
         this.getMsg()
       }
     })
@@ -72,21 +91,20 @@ export class AcceuilComponent implements OnInit {
 
   transferts: any = []; nbreEncour = 0; nbreSuccess = 0; nbreEchec = 0 
   getTransfert(){
-    this.firestore.collection('transferts').get().subscribe(transferts=>{
-      let num = 0; let couleur = ""; this.transferts = []
+    this.firestore.collection('transferts', ref => ref.limit(10)).get().subscribe(transferts=>{
+      let num = 0;  this.transferts = []
       this.nbreEncour = 0; this.nbreSuccess = 0; this.nbreEchec = 0
 
       transferts.forEach((transfert: any)=>{
-        num++
-        if(transfert.data()['etat']=="En cour"){
+        num++; let couleur = "";
+        if(transfert.data()['etat']=="en cour"){
           couleur="warning"
           this.nbreEncour++
-        }
-        if(transfert.data()['etat'] =="success"){
+
+        }else if(transfert.data()['etat'] =="success"){
           couleur="success"
           this.nbreSuccess++
-        }
-        if(transfert.data()['etat'] =="echec"){
+        }else if(transfert.data()['etat'] =="echec"){
           couleur="danger"
           this.nbreEchec++
         }
@@ -108,8 +126,9 @@ export class AcceuilComponent implements OnInit {
           monaieRecepteur: transfert.data()['monaieRecepteur'],
           monaieSender: transfert.data()['monaieSender'],   
         })
+        
       })
-      console.log(this.transferts)
+      
     })
   }
 
@@ -134,7 +153,6 @@ export class AcceuilComponent implements OnInit {
   }
   
   msg: any
-  
   sendMsg(){
     if(this.msg && this.idUser){
       this.firestore.collection('messages').add({
@@ -147,6 +165,7 @@ export class AcceuilComponent implements OnInit {
       })
     }
   }
+
   messages: any = []
   async getMsg(){
     await this.firestore.collection('messages', ref=>ref.where('idUser','==', this.idUser))
@@ -154,33 +173,75 @@ export class AcceuilComponent implements OnInit {
       this.messages = []
       messages.forEach((msg: any)=>{
         this.messages.push({
+          id: msg.payload.doc.id,
           message: msg.payload.doc.data()['message'],
           date: msg.payload.doc.data()['date'],
           idUser: msg.payload.doc.data()['idUser'],
           admin: msg.payload.doc.data()['admin'],
+          time: this.getTimeMsg(msg.payload.doc.data()['date']),
         })
         this.messages = this.sortMessagesByDate(this.messages)
       })
-      
-      
     })
+  }
+
+  getTimeMsg(date: any): string {
+    const messageDate = this.parseDate(date); // Convertir la date en objet Date
+    const now = new Date(); // Date actuelle
+    const diffInMs = now.getTime() - messageDate.getTime(); // Différence en millisecondes
+    const diffInSeconds = Math.floor(diffInMs / 1000); // Différence en secondes
+    const diffInMinutes = Math.floor(diffInSeconds / 60); // Différence en minutes
+    const diffInHours = Math.floor(diffInMinutes / 60); // Différence en heures
+    const diffInDays = Math.floor(diffInHours / 24); // Différence en jours
+  
+    // Conditions pour afficher le temps écoulé
+    if (diffInSeconds < 60) {
+      return "à l'instant";
+    } else if (diffInMinutes === 1) {
+      return "il y a une minute";
+    } else if (diffInMinutes < 60) {
+      return `il y a ${diffInMinutes} minutes`;
+    } else if (diffInHours === 1) {
+      return "il y a une heure";
+    } else if (diffInHours < 24) {
+      return `il y a ${diffInHours} heures`;
+    } else if (diffInDays === 1) {
+      return "il y a un jour";
+    } else if (diffInDays < 7) {
+      return `il y a ${diffInDays} jours`;
+    } else if (diffInDays < 30) {
+      const weeks = Math.floor(diffInDays / 7);
+      return `il y a ${weeks} semaine${weeks > 1 ? "s" : ""}`;
+    } else if (diffInDays < 365) {
+      const months = Math.floor(diffInDays / 30);
+      return `il y a ${months} mois`;
+    } else {
+      const years = Math.floor(diffInDays / 365);
+      return `il y a ${years} an${years > 1 ? "s" : ""}`;
+    }
   }
   
   sortMessagesByDate(messages: any) {
     return messages.sort((a: any, b: any) => {
-      const dateA = a.date;
-      const dateB = b.date;
+      const dateA = this.parseDate(a.date).getTime(); // Convertir la date du message A en millisecondes
+      const dateB = this.parseDate(b.date).getTime(); // Convertir la date du message B en millisecondes
   
-      if (dateA < dateB) {
-        return -1;  // Si dateA est plus ancienne, mettre a avant b
-      }
-      if (dateA > dateB) {
-        return 1;   // Si dateA est plus récente, mettre b avant a
-      }
-      return 0;
+      return dateA - dateB; // Tri croissant : négatif si a < b, 0 si a == b, positif si a > b
     });
   }
-  
+
+  parseDate(dateString: any): Date {
+    if (typeof dateString === 'string') {
+      // Remplacer "à" par une virgule pour rendre la chaîne compatible avec le constructeur Date
+      const formattedDate = dateString.replace(' à ', ', ');
+      return new Date(formattedDate);
+    } else if (dateString && typeof dateString === 'object' && dateString.seconds) {
+      // Si c'est un Timestamp Firestore, le convertir en Date
+      return new Date(dateString.seconds * 1000);
+    } else {
+      throw new Error('Le format de la date est invalide : ' + JSON.stringify(dateString));
+    }
+  }
 
   async getNameOfMonaie(id: any): Promise<string | null> {
     try {
@@ -247,7 +308,7 @@ export class AcceuilComponent implements OnInit {
     
     
   }
-
+  logoSender: any; logoReciever: any
   applyTaux(){
     this.montantRec = ""; this.errChange = ""; this.montantMinim = ""
     
@@ -268,6 +329,21 @@ export class AcceuilComponent implements OnInit {
       
     
   }
+  mS: any; mR: any
+  updateOperator(type: string, event: Event) {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedMonaie = this.monaies.find((monaie: any) => monaie.id === selectedValue);
+    if (selectedMonaie) {
+      if (type === 'send') {
+        this.mS = selectedMonaie.operateur+" ("+selectedMonaie.monaie+")";
+        this.logoSender = selectedMonaie.logo
+      } else if (type === 'receive') {
+        this.mR = selectedMonaie.operateur+" ("+selectedMonaie.monaie+")";
+        this.logoReciever = selectedMonaie.logo
+      }
+    }
+  }
+
   swapp(){
     if(this.idUser){
       alert('initiez le transfert a partir de votre tableau de bord')
@@ -277,4 +353,47 @@ export class AcceuilComponent implements OnInit {
       this.goTo('inscription')
     }
   }
+
+  faqs: any[] = [];
+
+  getFaqs() {
+    this.firestore.collection('faqs').valueChanges().subscribe((data: any[]) => {
+      this.faqs = data.map(faq => ({
+        question: faq.question,
+        reponse: faq.reponse,
+        date: faq.date
+      }));
+      
+    }, error => {
+      console.error('Erreur lors de la récupération des FAQs:', error);
+    });
+  }
+
+                                 
+  @ViewChild('staticBackdrop') messageContainer!: ElementRef;
+
+  // Méthode pour défiler vers le bas
+  scrollToBottom(): void {
+    try {
+      this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
+    } catch (err) {
+      console.error('Erreur lors du défilement :', err);
+    }
+  }
+
+  // Appelé lorsque la modale est ouverte
+  onModalOpen(): void {
+    this.scrollToBottom();
+  }
+  goToWhatsapp(){
+    let phoneNumber = "+237691681051"
+    const cleanedNumber = phoneNumber.replace(/\D/g, ''); 
+
+    // Générer l'URL de WhatsApp
+    const url = `https://wa.me/${cleanedNumber}`;
+
+    // Ouvrir dans une nouvelle fenêtre
+    window.open(url, '_blank');
+  }
 }
+

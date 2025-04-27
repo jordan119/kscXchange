@@ -162,3 +162,56 @@ a {
   }
 
 }
+@media (max-width: 768px) {
+  .content {
+    padding-bottom: 100px;
+    .content-connect{
+      margin-bottom: 10rem;
+    }
+  }
+
+  .titre {
+    min-height: 20vh;
+    font-size: 1.5rem;
+  }
+
+  .align {
+    flex-direction: column;
+
+    &__item {
+      &--start,
+      &--end {
+        align-self: center;
+      }
+    }
+  }
+
+  .site__logo {
+    margin-bottom: 1rem;
+  }
+
+  .form__field {
+    margin-bottom: 0.5rem;
+  }
+
+  .grid {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .register {
+    padding: 2rem 1rem;
+
+    input {
+      padding: 0.5rem;
+      &[type="button"] {
+        margin-bottom: 3rem;
+      }
+    }
+  }
+}

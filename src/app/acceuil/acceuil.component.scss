@@ -1,212 +1,264 @@
-.content{
-    background-color:  #12222b;
-    padding-bottom: 300px ;
+.content {
+    background-color: #12222b;
+    padding-bottom: 300px;
     min-height: 100vh;
     position: relative;
-}
-.titre{
-    background-color:  #e3f2fd;
+  }
+  
+  .titre {
+    background-color: #e3f2fd;
     width: 100%;
     min-height: 40vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-.ww-x{
+  }
+  
+  .ww-x {
     width: 80%;
-}
-.table{
+  }
+  
+  .table {
     box-shadow: 0 0 250px #000;
     border-radius: 10px;
-}
-.card-change{
+  }
+  
+  .card-change {
     width: 60%;
     box-shadow: 0 0 250px #000;
     text-align: center;
     padding: 4rem 2rem;
     background: transparent;
-}
-table{
+  }
+  
+  table {
     background: transparent;
     border: none;
-}
-.center{
+  }
+  
+  .center {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.first{
-    background-color:  #e3f2fd;
+  }
+  
+  .first {
+    background-color: #e3f2fd;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
     width: 40%;
-}
-.logo-currency{
+  }
+  
+  .logo-currency {
     width: 60px;
     height: 60px;
     object-fit: contain;
     border-radius: 50%;
-}
-.around{
+  }
+  
+  .around {
     width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    
-}
-.img-back{
+  }
+  
+  .img-back {
     width: 80%;
-    
-}
-.center{
-    display: flex;
-    justify-content: center;
-    
-    align-items: center;
-}
-.flex-column{
+  }
+  
+  .flex-column {
     flex-direction: column;
-}
-.process{
+  }
+  
+  .process {
     display: flex;
     justify-content: space-around;
     align-items: center;
     padding: 2rem;
     flex-wrap: wrap;
-    .card{
-        width: 350px;
-        min-height: 180px;
-        transition: all ease-in-out .3s;
-        cursor: pointer;
-        padding: 2rem;
-        margin: .8rem;
+  
+    .card {
+      width: 350px;
+      min-height: 180px;
+      transition: all ease-in-out 0.3s;
+      cursor: pointer;
+      padding: 2rem;
+      margin: 0.8rem;
     }
-
-    .card:hover{
-        transform: scale(1.1);
+  
+    .card:hover {
+      transform: scale(1.1);
     }
-}
-.four{
+  }
+  
+  .four {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    table{
-        width: 80%;
+  
+    table {
+      width: 80%;
     }
-}
-.container-about{
-    p{
-        text-align: justify;
+  }
+  
+  .container-about {
+    p {
+      text-align: justify;
     }
-    .l{
-        width: 80%;
+  
+    .l {
+      width: 80%;
     }
-    .accordion{
-        width: 80%;
+  
+    .accordion {
+      width: 80%;
     }
-}
-.text-small{
+  }
+  
+  .text-small {
     font-size: 15px;
-}
-.container-faq{
+  }
+  
+  .container-faq {
     display: flex;
     justify-content: space-around;
     align-items: center;
     min-height: 70vh;
-    .l{
-        width: 50%;
+  
+    .l {
+      width: 50%;
     }
-    .r{
-        width: 35%;
+  
+    .r {
+      width: 35%;
     }
-    img{
-        width: 400px;
-        height: 400px;
-        object-fit: contain;
-        border-radius: 50%;
+  
+    img {
+      width: 400px;
+      height: 400px;
+      object-fit: contain;
+      border-radius: 50%;
     }
-}
-.container-avis{
+  }
+  
+  .container-avis {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    
-    .card{
-        width: 300px;
-        min-height: 200px;
+  
+    .card {
+      width: 300px;
+      min-height: 200px;
     }
-    p{
-        color: #bbbbbb;
+  
+    p {
+      color: #bbbbbb;
     }
-}
-.message{
+  }
+  
+  .message {
     cursor: pointer;
     position: fixed;
     top: 80vh;
     right: 2rem;
-    padding: .2rem;
+    padding: 0.2rem;
     width: 5rem;
     height: 5rem;
-    background: rgba(237, 239, 240, 0.1);
-    transition: .5s all ease-in-out;
+    background: rgba(237, 239, 240, 0.3);
+    transition: 0.5s all ease-in-out;
     border-radius: 10px;
-}
-
-.message:hover{
+  }
+  
+  .message:hover {
     transform: scale(1.1);
-}
-.modal-body{
+  }
+  
+  .modal-body {
+    position: relative; /* Définit la référence pour les positions absolues */
     height: 70vh;
     overflow-y: auto;
-}
-.receiver{
     display: flex;
-    margin: 1rem 0rem;
-    cursor: pointer;
-    .logo-person{
-        width: 2rem;
-        height: 2rem;
-        border-radius: 50%;
-        background: #bbbbbb;
-    }
-    .msg-box{
-        background: #bbbbbb;
-        max-width: 80%;
-        padding: .5rem;
-        border-radius: 10px;
-        margin-left: 1rem;
-        margin-bottom: .5rem;
-    }
-}
-.sender{
+    flex-direction: column; /* Empile les messages verticalement */
+    gap: 10px; /* Ajoute un espacement entre les messages */
+  }
+  
+  .receiver, .sender {
     display: flex;
-    width: 100%;
-    justify-content: flex-end;
-    cursor: pointer;
-    .logo-person{
-        width: 2rem;
-        height: 2rem;
-        border-radius: 50%;
-        background: #bbbbbb;
-    }
-    .msg-box{
-        background: #bbbbbb;
-        max-width: 80%;
-        padding: .5rem;
-        border-radius: 10px;
-        margin-right: 1rem;
-        margin-bottom: .5rem;
-    }
-}
-.msb-reply {
+    flex-direction: column;
+    max-width: 70%; /* Limite la largeur maximale des messages */
+    margin: 10px 0;
+    word-wrap: break-word; /* Permet de couper les mots longs */
+    position: relative;
+  }
+  
+  /* Messages reçus (bg-re) alignés à droite */
+  .receiver {
+    align-self: flex-end; /* Aligne les messages à droite */
+    text-align: right;
+    margin-bottom: 10px; /* Espacement entre les messages */
+  }
+  
+  /* Messages envoyés (bg-se) alignés à gauche */
+  .sender {
+    align-self: flex-start; /* Aligne les messages à gauche */
+    text-align: left;
+    margin-bottom: 10px; /* Espacement entre les messages */
+  }
+  
+  /* Style des boîtes de messages */
+  .msg-box {
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    display: inline-block;
+    background-color: #f1f1f1; /* Couleur par défaut */
+    position: relative;
+    min-width: 50px; /* Largeur minimale pour correspondre à la largeur de .time */
+    word-wrap: break-word; /* Permet de couper les mots longs */
+  }
+  
+  /* Messages reçus (bg-re) */
+  .bg-re {
+    background-color: rgb(0, 122, 0); /* Couleur verte pour les messages reçus */
+    color: white;
+    min-width: max-content; /* S'assure que la largeur minimale correspond au contenu */
+  }
+  
+  /* Messages envoyés (bg-se) */
+  .bg-se {
+    background-color: rgb(65, 51, 117); /* Couleur violette pour les messages envoyés */
+    color: white;
+    min-width: max-content; /* S'assure que la largeur minimale correspond au contenu */
+  }
+  
+  /* Style pour le time (moment du message) */
+  .time {
+    font-size: 10px;
+    color: #ccc;
+    margin-top: 5px;
+    position: absolute;
+    bottom: -15px; /* Positionné juste en dessous du message */
+    left: 0; /* Aligné à gauche */
+    white-space: nowrap; /* Empêche le texte de passer à la ligne */
+  }
+  
+  /* Ajustement pour les messages alignés à droite */
+  .receiver .time {
+    left: auto; /* Réinitialise l'alignement à gauche */
+    right: 0; /* Aligne le time à droite */
+  }
+  
+  .msb-reply {
     display: flex;
-    
-}
-.msb-reply textarea {
+  }
+  
+  .msb-reply textarea {
     width: 100%;
     font-size: 13px;
     border: 0;
@@ -214,134 +266,176 @@ table{
     resize: none;
     height: 60px;
     background: 0 0;
-}
+  }
+  .img-logo{
+    width: 7rem;
+    height: 7rem;
+    margin: .5rem;
+    border-radius: 50%;
+    object-fit: contain;
+  
+  }
+  /* Pour les écrans de moins de 768px (tablettes et téléphones) */
+  @media (max-width: 768px) {
+  .content {
+    padding-bottom: 300px;
+  }
 
+  .titre {
+    min-height: 70vh;
+    font-size: 1.5rem;
+    padding: 1rem;
+  }
 
+  .ww-x {
+    width: 100%;
+  }
 
-/* Pour les écrans de moins de 768px (tablettes et téléphones) */
-@media (max-width: 768px) {
-    .ww-x{
-        width: 80%;
+  .table {
+    box-shadow: 0 0 250px #000;
+    border-radius: 10px;
+  }
+
+  .card-change {
+    width: 95%;
+    box-shadow: 0 0 250px #000;
+    text-align: center;
+    padding: 1rem;
+    background: transparent;
+  }
+
+  table {
+    background: transparent;
+    border: none;
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .first {
+    background-color: #e3f2fd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .logo-currency {
+    width: 40px;
+    height: 40px;
+  }
+
+  .around {
+    flex-direction: column;
+  }
+
+  .img-back {
+    width: 100%;
+  }
+
+  .process {
+    padding: 1rem;
+
+    .card {
+      width: 100%;
+      min-height: 150px;
+      padding: 1rem;
+      margin: 0.5rem;
     }
-    .table{
-        box-shadow: 0 0 250px #000;
-        border-radius: 10px;
+  }
+
+  .four {
+    table {
+      width: 100%;
     }
-    .card-change{
-        width: 95%;
-        box-shadow: 0 0 250px #000;
-        text-align: center;
-        padding: 1rem;
-        background: transparent;
+  }
+
+  .container-about {
+    .l,
+    .accordion {
+      width: 100%;
     }
-    table{
-        background: transparent;
-        border: none;
+  }
+
+  .container-faq {
+    flex-direction: column;
+    min-height: auto;
+
+    .l,
+    .r {
+      width: 100%;
     }
-    .center{
-        display: flex;
-        justify-content: center;
-        align-items: center;
+
+    img {
+      width: 100%;
+      height: auto;
     }
-    .first{
-        background-color:  #e3f2fd;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        width: 40%;
+  }
+
+  .container-avis {
+    flex-direction: column;
+
+    .card {
+      width: 100%;
+      height: auto;
+      margin: 0.5rem 0;
     }
-    .logo-currency{
-        width: 60px;
-        height: 60px;
-        object-fit: contain;
-        border-radius: 50%;
+  }
+
+  .message {
+    width: 4rem;
+    height: 4rem;
+    right: 1rem;
+    top: 85vh;
+  }
+
+  .modal-body {
+    height: 60vh;
+  }
+
+  .receiver,
+  .sender {
+    .logo-person {
+      width: 1.5rem;
+      height: 1.5rem;
     }
-    .around{
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        
+
+    .msg-box {
+      max-width: 90%;
+      padding: 0.3rem;
     }
-    .img-back{
-        width: 80%;
-        
-    }
-    .center{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .process{
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        padding: 2rem;
-        flex-wrap: wrap;
-        .card{
-            width: 350px;
-            min-height: 180px;
-            transition: all ease-in-out .3s;
-            cursor: pointer;
-            padding: 2rem;
-            margin: .8rem;
-        }
+  }
+  
+
+  .msb-reply textarea {
+    height: 50px;
+    padding: 5px 10px;
+  }
+  .img-logo{
+    width: 4rem;
+    height: 4rem;
+    margin: .2rem;
+    border-radius: 50%;
+    object-fit: contain;
     
-        .card:hover{
-            transform: scale(1.1);
-        }
-    }
-    .four{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        table{
-            width: 80%;
-        }
-    }
-    .container-about{
-        p{
-            text-align: justify;
-        }
-        .l{
-            width: 90%;
-        }
-        .accordion{
-            width: 90%;
-        }
-    }
-    .container-faq{
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        min-height: 70vh;
-        .l{
-            width: 90%;
-        }
-        .r{
-            width: 35%;
-        }
-        img{
-            width: 400px;
-            height: 400px;
-            object-fit: contain;
-            border-radius: 50%;
-        }
-    }
-    .container-avis{
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        flex-wrap: wrap;
-        .card{
-            width: 80%;
-            height: auto;
-            margin: 1rem;
-        }
-        p{
-            color: #bbbbbb;
-        }
-    }
+  }
+
+  .receiver,
+  .sender {
+    max-width: 90%; /* Réduit la largeur maximale des messages */
+  }
+
+  .msg-box {
+    padding: .5rem; /* Réduit le padding pour les petits écrans */
+    font-size: 12px; /* Réduit la taille de la police */
+  }
+
+  .time {
+    font-size: 9px; /* Réduit la taille de la police pour le time */
+  }
+  
 }

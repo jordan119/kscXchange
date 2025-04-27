@@ -6,11 +6,12 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })
@@ -36,6 +37,8 @@ export class AdminComponent implements OnInit{
     this.getAuth()
     this.getMonaie()
     this.getTransfert()
+    this.getAffiliations()
+    this.getFaqs()
     await this.getMsg()
 
     this.getTaux()
@@ -52,7 +55,27 @@ export class AdminComponent implements OnInit{
         this.idUser = auth?.uid 
         this.nom = auth.email![0]
         this.hasUser = true
+
+        this.getProfile()
       }
+    })
+  }
+
+  profiles: any = []
+  getProfile(){
+    this.firestore.collection('profiles').get().subscribe(profiles=>{
+      profiles.forEach((profile: any)=>{
+        this.profiles.push({
+          id: profile.id,
+          nom: profile.data()['nom']+" "+profile.data()['prenom'],
+          tel: profile.data()['codeTel']+" "+profile.data()['tel'],
+          email: profile.data()['email'],
+          points: profile.data()['points'],
+          affCode: profile.data()['affCode']
+        })
+      
+      })
+      
     })
   }
 
@@ -61,16 +84,20 @@ export class AdminComponent implements OnInit{
   }
 
   vider(){
-    this.pays = ""; this.monaie = ""; this.operateur = ""; this.tVente =""; this.tAchat=""
+    this.pays = ""; this.monaie = ""; this.operateur = ""; this.tVente =""; 
+    this.tAchat=""; this.typeMonaie="emetteur"; this.priorite = 3
   }
+
   msgErr: any = ""
   isadding = false
+  typeMonaie: string = 'emetteur';
+  priorite: Number = 3;
   async add(){
     this.msgErr = ""
     this.isadding = true
-    if(this.pays, this.monaie){
+    if(this.pays, this.monaie, this.operateur, this.typeMonaie, this.priorite){
       const users = [
-        { pays: this.pays, monaie: this.monaie, operateur: this.operateur},
+        { pays: this.pays, monaie: this.monaie, operateur: this.operateur, typeMonaie: this.typeMonaie, priorite: this.priorite },
       ];
       try {
         await this.apiService.addDocuments('devises', users).then(()=>{
@@ -94,18 +121,22 @@ export class AdminComponent implements OnInit{
   async getMonaie(){
     this.firestore.collection('devises').get().subscribe(monaies => {
       this.monaies= []
-      monaies.forEach((monaie: any) => {   
+      monaies.forEach((monaie: any) => { 
+        
         this.monaies.push({
           id: monaie.id,
           monaie: monaie.data()['monaie'],
           operateur: monaie.data()['operateur'],
-          pays: monaie.data()['pays']
-        })    
+          pays: monaie.data()['pays'],
+          typeMonaie: monaie.data()['typeMonaie'],
+          priorite: monaie.data()['priorite'],
+        }) 
+          
       })
     })
   }
   
-  montantMinim: any
+  montantMinim: any; montantMax: any
   addTaux(){
     this.msgErr=""
     if(this.tauxChange && this.currencyCode && this.currencyCodeRecept){
@@ -114,13 +145,14 @@ export class AdminComponent implements OnInit{
         taux: this.tauxChange,
         sender: this.currencyCode,
         reciever: this.currencyCodeRecept,
-        montantMinim: this.montantMinim
+        montantMinim: this.montantMinim,
+        montantMax: this.montantMax
       }).then(()=>{
         alert('ajouté avec success')
         this.msgErr=""
         this.isadding = false
         this.currencyCode =""; this.currencyCodeRecept=""; 
-        this.tauxChange=""; this.montantMinim = ""
+        this.tauxChange=""; this.montantMinim = ""; this.montantMax =""
       })
     }else{
       this.msgErr = "Remplir les champs obligatoire"
@@ -146,10 +178,12 @@ export class AdminComponent implements OnInit{
       this.firestore.collection('devises').doc(id).update({
         pays: this.pays,
         monaie: this.monaie,
-        operateur: this.operateur
+        operateur: this.operateur,
+        typeMonaie: this.typeMonaie,
+        priorite: this.priorite
       }).then(()=>{
         alert('Modifié avec success')
-        this.pays = ""; this.monaie = ""; this.operateur = "";
+        this.pays = ""; this.monaie = ""; this.operateur = ""; this.typeMonaie = "emetteur", this.priorite = 3
         this.getMonaie()
         this.isSaved = false
       })
@@ -158,44 +192,76 @@ export class AdminComponent implements OnInit{
     }
     
   }
+
   fileSCover: any
   upload($event: any){
     this.fileSCover =  $event.target.files[0]
   }
 
   nbreTransfert = 0
+  transferts: any = [];
+  getTransfert() {
+    this.transferts = [];
+    this.firestore.collection('transferts').snapshotChanges(['added']).subscribe(transferts => {
+      let num = 0;
+      
+      this.transferts = [];
+      transferts.forEach(async (transfert: any) => {
+        num++; let couleur = "";
+        console.log(transfert.payload.doc.data()['etat'])
+        if (transfert.payload.doc.data()['etat'] == "en cour") {
+          couleur = "primary";
+        }
+        if (transfert.payload.doc.data()['etat'] == "success") {
+          couleur = "success";
+        }
+        if (transfert.payload.doc.data()['etat'] == "echec") {
+          couleur = "danger";
+        }
 
-  transferts: any = []
-  getTransfert(){
-    this.transferts = []
-    this.firestore.collection('transferts').snapshotChanges(['added']).subscribe(transferts=>{
-      let num = 0; let couleur = ""; this.transferts = []
-      transferts.forEach((transfert: any)=>{
-        
-        num++
-        if(transfert.payload.doc.data()['etat']=="en cour"){
-          couleur="primary"
-        }
-        if(transfert.payload.doc.data()['etat'] =="success"){
-          couleur="success"
-        }
-        if(transfert.payload.doc.data()['etat'] =="echec"){
-          couleur="danger"
-        }
-
-        let date = this.formatTimestampToDate(transfert.payload.doc.data()['date'])
+        let date = this.formatTimestampToDate(transfert.payload.doc.data()['date']);
+        const monaieSender = await this.getMonaieDescription(transfert.payload.doc.data()['initiateur']);
+        const monaieRecepteur = await this.getMonaieDescription(transfert.payload.doc.data()['recepteur']);
+        console.log(couleur)
         this.transferts.push({
           num: num,
           id: transfert.payload.doc.id,
           etat: transfert.payload.doc.data()['etat'],
           tel: transfert.payload.doc.data()['tel'],
-          montant: transfert.payload.doc.data()['montant']+" => "+transfert.payload.doc.data()['montantRecept'],
+          montant: transfert.payload.doc.data()['montant'] + " " + monaieSender,
           couleur: couleur,
-          date: date
-        })
-      })
-      
-    })
+          date: date,
+          recepteur: transfert.payload.doc.data()['recepteur'],
+          initiateur: transfert.payload.doc.data()['initiateur'],
+          montantRecept: transfert.payload.doc.data()['montantRecept'] + " " + monaieRecepteur,
+          taux: transfert.payload.doc.data()['taux'],
+          idUser: transfert.payload.doc.data()['idUser'],
+          nomRecepteur: transfert.payload.doc.data()['nomRecepteur'],
+          telRecepteur: transfert.payload.doc.data()['telRecepteur'],
+          emailRecepteur: transfert.payload.doc.data()['emailRecepteur'],
+          monaieSender: monaieSender,
+          monaieRecepteur: monaieRecepteur,
+
+          nomCompte: transfert.payload.doc.data()['nomCompte'],
+          numeroCarte: transfert.payload.doc.data()['numeroCarte'],
+          nomBanque: transfert.payload.doc.data()['nomBanque'],
+
+          numeroAlipay: transfert.payload.doc.data()['numeroAlipay'],
+          nomCompletAlipay: transfert.payload.doc.data()['nomCompletAlipay'],
+          codeQrAlipay: transfert.payload.doc.data()['codeQrAlipay'],
+          adresseUsdt: transfert.payload.doc.data()['adresseUsdt'],
+          courrierPaypal: transfert.payload.doc.data()['courrierPaypal'],
+          nomPaypal: transfert.payload.doc.data()['nomPaypal'],
+          telPaypal: transfert.payload.doc.data()['telPaypal'],
+
+          // Informations sur l'expéditeur
+          numE: transfert.payload.doc.data()['numE'],
+          whatE: transfert.payload.doc.data()['whatE'],
+          nomTelE: transfert.payload.doc.data()['nomTelE']          
+        });
+        this.filterTransfertsByDate(date)
+      });
+    });
   }
 
   formatTimestampToDate(timestamp: { seconds: number; nanoseconds: number }): string {
@@ -217,7 +283,6 @@ export class AdminComponent implements OnInit{
     // Retourner la date formatée
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   }
-  
 
   extractTimestampValues(timestamp: string): { seconds: number, nanoseconds: number } | null {
     // Utilisation d'une expression régulière pour extraire les valeurs de secondes et nanosecondes
@@ -235,11 +300,74 @@ export class AdminComponent implements OnInit{
     return null;
   }
 
+  async getMonaieById(id: string): Promise<{ monaie: string, operateur: string, pays: string } | null> {
+    try {
+      const deviseDoc = await this.firestore.collection('devises').doc(id).get().toPromise();
+      if (deviseDoc?.exists) {
+        const data: any = deviseDoc.data();
+        return {
+          monaie: data['monaie'],
+          operateur: data['operateur'],
+          pays: data['pays']
+        };
+      } else {
+        console.error('Aucune devise trouvée avec cet ID');
+        return null;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération de la devise:', error);
+      return null;
+    }
+  }
+
+  async getMonaieDescription(id: string): Promise<string> {
+    const monaieData = await this.getMonaieById(id);
+    
+    if (monaieData) {
+      return `${monaieData.monaie}, ${monaieData.operateur} (${monaieData.pays})`;
+    } else {
+      return 'Informations indisponibles';
+    }
+  }
   etatTrans: any; numTrans: any; dateTrans: any; status: any
-  modifier(transfert: any){
-    this.etatTrans = transfert.etat
-    this.numTrans = transfert.id
-    this.dateTrans = transfert.date
+  montantEnvoye: string = '';
+  montantRecu: string = '';
+  nomRecepteur: string = '';
+  telRecepteur: string = '';
+  nomCompte: string = '';
+  numeroCarte: string = '';
+  nomBanque: string = '';
+  numeroAlipay: string = '';
+  nomCompletAlipay: string = '';
+  codeQrAlipay: string = '';
+  adresseUsdt: string = '';
+  courrierPaypal: string = '';
+  nomPaypal: string = '';
+  telPaypal: string = '';
+  numE: any= ""; whatE: any=""; nomTelE: any=""
+  modifier(transfert: any) {
+    this.numTrans = transfert.id;
+    this.dateTrans = transfert.date;
+    this.etatTrans = transfert.etat;
+    this.montantEnvoye = transfert.montant;
+    this.montantRecu = transfert.montantRecept;
+    this.nomRecepteur = transfert.nomRecepteur;
+    this.telRecepteur = transfert.telRecepteur;
+
+    this.nomCompte = transfert.nomCompte;
+    this.numeroCarte = transfert.numeroCarte;
+    this.nomBanque = transfert.nomBanque;
+
+    this.numeroAlipay = transfert.numeroAlipay;
+    this.nomCompletAlipay = transfert.nomCompletAlipay;
+    this.codeQrAlipay = transfert.codeQrAlipay;
+    this.adresseUsdt = transfert.adresseUsdt;
+    this.courrierPaypal = transfert.courrierPaypal;
+    this.nomPaypal = transfert.nomPaypal;
+    this.telPaypal = transfert.telPaypal;
+    this.numE = transfert.numE;
+    this.whatE = transfert.whatE;
+    this.nomTelE = transfert.nomTelE;
   }
 
   modifierEtat(){
@@ -262,6 +390,8 @@ export class AdminComponent implements OnInit{
     this.monaie = monaie.monaie; this.operateur = monaie.operateur; 
     this.tAchat = monaie.tAchat; this.tVente = monaie.tVente
     this.pays = monaie.pays
+    this.typeMonaie = monaie.typeMonaie;
+    this.priorite = monaie.priorite
   }
 
   deleteTaux(taux: any){
@@ -285,6 +415,45 @@ export class AdminComponent implements OnInit{
     }
   }
 
+
+  modifierTaux() {
+    if (this.tauxToUp && this.currencyCode && this.currencyCodeRecept && this.montantMinim) {
+      this.isSaved = true
+      this.firestore.collection('tauxChange').doc(this.tauxToUp).update({
+        taux: this.tauxChange,
+        sender: this.currencyCode,
+        reciever: this.currencyCodeRecept,
+        montantMinim: this.montantMinim,
+        montantMax: this.montantMax
+      }).then(() => {
+        alert('Taux de change modifié avec succès');
+        this.isSaved = false
+        this.tauxToUp = null;
+        this.tauxChange = '';
+        this.currencyCode = '';
+        this.currencyCodeRecept = '';
+        this.montantMinim = '';
+        this.montantMax = ''
+        this.getTaux(); // Recharger les taux de change après la modification
+      }).catch((error) => {
+        console.error('Erreur lors de la modification du taux de change:', error);
+        alert('Erreur lors de la modification du taux de change');
+      });
+    } else {
+      alert('Veuillez remplir tous les champs');
+    }
+  }
+
+  tauxToUp: any
+  setTaux(taux: any){
+    this.tauxToUp = taux.id
+    this.tauxChange = taux.taux
+    this.currencyCode = taux.idSender
+    this.currencyCodeRecept = taux.idReceiver
+    this.montantMinim = taux.montantMinim
+    this.montantMax = taux.montantMax
+  }
+
   writeToWhat(phoneNumber: string){
     // Remplacez les espaces ou caractères spéciaux dans le numéro
     const cleanedNumber = phoneNumber.replace(/\D/g, ''); 
@@ -299,9 +468,6 @@ export class AdminComponent implements OnInit{
   currencyCode: any
   currencyCodeRecept: any
   tauxChange: any
-
-
-
   messages: any = []
   msg: any; isSending = false; idUserOf: any
   sendMsg(){
@@ -315,39 +481,48 @@ export class AdminComponent implements OnInit{
       }).then(()=>{
         this.msg = ""
         this.isSending = false
+        this.listOf(this.idUserOf);
       })
     }else{
       alert('Erreur!')
     }
   }
-  
+
   msgOf: any = []; nomOf: any
-  listOf(idUser: any){
-    this.msgOf = []
-    this.firestore.collection('messages', ref=>ref.where('idUser', '==', idUser)).snapshotChanges(['added']).subscribe(messages=>{
-      this.msgOf = []
-      messages.forEach(async (msg: any)=>{
-        this.firestore.collection('profiles', ref=>ref.where('idUser', '==', msg.payload.doc.data()['idUser'])).get().subscribe(users=>{
-          users.forEach((user: any)=>{
-            this.nomOf = user.data()['tel']
-            this.idUserOf = msg.payload.doc.data()['idUser']
-            let date = this.formatTimestampToTime(msg.payload.doc.data()['date'])
-            this.msgOf.push({
-              id: msg.payload.doc.id,
-              msg: msg.payload.doc.data()['message'],
-              idUser: msg.payload.doc.data()['idUser'],
-              date: date, 
-              email: user.data()['email'],
-              tel: user.data()['tel'],
-              nom: user.data()['email'][0],
-              admin: msg.payload.doc.data()['admin']
-            })
-            this.sortMessagesByDate(this.msgOf) 
-          })
-        })
-      })
-    })   
+  listOf(idUser: any) {
+    this.msgOf = [];
+    this.firestore.collection('messages', ref => ref.where('idUser', '==', idUser)).snapshotChanges(['added']).subscribe(messages => {
+      this.msgOf = [];
+      messages.forEach(async (msg: any) => {
+        this.firestore.collection('profiles', ref => ref.where('idUser', '==', msg.payload.doc.data()['idUser'])).get().subscribe(users => {
+          users.forEach((user: any) => {
+            this.nomOf = user.data()['tel'];
+            this.idUserOf = msg.payload.doc.data()['idUser'];
+            let date = this.formatTimestampToTime(msg.payload.doc.data()['date']);
+            
+            // Vérifier si le message existe déjà dans msgOf
+            const exists = this.msgOf.some((existingMsg: any) => existingMsg.id === msg.payload.doc.id);
+            if (!exists) {
+              this.msgOf.push({
+                id: msg.payload.doc.id,
+                msg: msg.payload.doc.data()['message'],
+                idUser: msg.payload.doc.data()['idUser'],
+                date: date,
+                email: user.data()['email'],
+                tel: user.data()['tel'],
+                nom: user.data()['email'][0],
+                admin: msg.payload.doc.data()['admin']
+              });
+            }
+  
+            // Trier les messages par date après les avoir tous ajoutés
+            this.msgOf = this.sortMessagesByDate(this.msgOf);
+          });
+        });
+      });
+    });
   }
+
   getUser(id: any){
     
     this.firestore.collection('profiles', ref=>ref.where('idUser', '==', id)).get().subscribe(users=>{
@@ -356,6 +531,7 @@ export class AdminComponent implements OnInit{
       })
     })
   }
+
   getMsg() {
     this.messages =[]
     this.firestore.collection('messages').snapshotChanges(['added']).subscribe(messages => {
@@ -377,6 +553,7 @@ export class AdminComponent implements OnInit{
               tel: user.data()['tel'],
               nom: user.data()['email'][0] // Prendre la première lettre de l'email pour le nom
             })
+            
             this.messages = this.filterMessagesByUser(this.messages) 
           })
         }) 
@@ -421,9 +598,9 @@ export class AdminComponent implements OnInit{
   
   sortMessagesByDate(messages: any) {
     return messages.sort((a: any, b: any) => {
-      const dateA = a.date;
-      const dateB = b.date;
-  
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+
       if (dateA < dateB) {
         return -1;  // Si dateA est plus ancienne, mettre a avant b
       }
@@ -467,20 +644,59 @@ export class AdminComponent implements OnInit{
     const tauxPromises = tauxSnapshot.docs.map(async (tc: any) => {
       const sender = await this.getDecOf(tc.data()['sender']);
       const receiver = await this.getDecOf(tc.data()['reciever']);
-      console.log(tc.id)
+      
+      const tauxData = {
+        id: tc.id,
+        idSender: tc.data()['sender'],
+        idReceiver: tc.data()['reciever'],
+        sender: sender,
+        reciever: receiver,
+        montantMinim: tc.data()['montantMinim'],
+        montantMax: tc.data()['montantMax'],
+        taux: tc.data()['taux']
+      };
+
+      this.taux.push(tauxData);
+      this.allTaux.push(tauxData);
+    })
+  }
+
+
+  async getTauxOf(id: any): Promise<void> {
+    this.taux = []
+    const tauxSnapshot : any = await this.firestore.collection('tauxChange').doc(id).get().toPromise();
+    const tauxPromises = tauxSnapshot.docs.map(async (tc: any) => {
+      const sender = await this.getDecOf(tc.data()['sender']);
+      const receiver = await this.getDecOf(tc.data()['reciever']);
+      
       this.taux.push({
         id: tc.id,
         sender: sender,
         reciever: receiver,
         taux: tc.data()['taux'],
+        montantMinim: tc.data()['montantMinim']
       });
     });
   }
+
   
   async getDecOf(id: any): Promise<string> {
     const deviseDoc: any = await this.firestore.collection('devises').doc(id).get().toPromise();
-    const deviseData = deviseDoc!.data();
-    return `${deviseData['pays']} (${deviseData['pays']})`;
+    const deviseData = deviseDoc!.data( );
+    return `${deviseData['pays']}, ${deviseData['monaie']} (${deviseData['operateur']})`;
+  }
+  
+  search: any; allTaux: any = []; 
+  searchTaux(){
+    console.log(this.search)
+    if(this.search.trim() === ''){
+      this.taux = this.allTaux
+    }else{
+      this.taux = this.allTaux.filter((taux: any)=>{
+        return taux.sender.toLowerCase().includes(this.search.toLowerCase()) || taux.reciever.toLowerCase().includes(this.search.toLowerCase())
+      })
+    }
+    
   }
 
   verifications: any = []
@@ -492,5 +708,149 @@ export class AdminComponent implements OnInit{
     })
   }
   
+  affiliations: any = []
+  getAffiliations() {
+    this.firestore.collection('profiles').valueChanges().subscribe((data: any[]) => {
+      this.affiliations = data
+        .filter(profile => profile.points && profile.points >= 1) // Filtrer les profils avec des points >= 1
+        .map(profile => ({
+          nom: profile.nom,
+          telephone: profile.tel,
+          points: profile.points || 0
+        }));
+      console.log('Affiliations:', this.affiliations);
+    }, error => {
+      console.error('Erreur lors de la récupération des affiliations:', error);
+    });
+  }
+
+  question: any; reponse: any
+  addFaqs() {
+    if (this.question && this.reponse) {
+      this.firestore.collection('faqs').add({
+        question: this.question,
+        reponse: this.reponse,
+        date: new Date()
+      }).then(() => {
+        console.log('FAQ ajoutée avec succès');
+        this.question = '';
+        this.reponse = '';
+      }).catch((error) => {
+        console.error('Erreur lors de l\'ajout de la FAQ:', error);
+      });
+    } else {
+      console.error('Veuillez remplir tous les champs');
+    }
+  }
+
+  faqs: any[] = [];
+  getFaqs() {
+    this.firestore.collection('faqs').valueChanges().subscribe((data: any[]) => {
+      this.faqs = data.map(faq => ({
+        question: faq.question,
+        reponse: faq.reponse,
+        date: faq.date
+      }));
+      console.log('FAQs:', this.faqs);
+    }, error => {
+      console.error('Erreur lors de la récupération des FAQs:', error);
+    });
+  }
+
+  openBody() {
+    document.querySelector('.list')?.classList.add('d-none');
+    document.querySelector('.body-msg')?.classList.add('d-block');
+  }
+  
+  closeBody() {
+    document.querySelector('.list')?.classList.remove('d-none');
+    document.querySelector('.body-msg')?.classList.remove('d-block');
+  }
+
+  faqToUpdate: any
+  editFaq(faq: any) {
+    this.faqToUpdate = faq.id;
+    this.question = faq.question;
+    this.reponse = faq.reponse;
+  }
+
+  updateFaq() {
+    if (this.faqToUpdate && this.question && this.reponse) {
+      this.firestore.collection('faqs').doc(this.faqToUpdate).update({
+        question: this.question,
+        reponse: this.reponse,
+        date: new Date()
+      }).then(() => {
+        console.log('FAQ modifiée avec succès');
+        this.faqToUpdate = null;
+        this.question = '';
+        this.reponse = '';
+        this.getFaqs();
+      }).catch((error) => {
+        console.error('Erreur lors de la modification de la FAQ:', error);
+      });
+    } else {
+      console.error('Veuillez remplir tous les champs');
+    }
+  }
+
+  deleteFaq(id: string) {
+    let c = confirm('Cette suppression est définitive. Voulez-vous continuer?');
+    if (c) {
+      this.firestore.collection('faqs').doc(id).delete().then(() => {
+        console.log('FAQ supprimée avec succès');
+        this.getFaqs();
+      }).catch((error) => {
+        console.error('Erreur lors de la suppression de la FAQ:', error);
+      });
+    }
+  }
+
+  trackById(index: number, item: any) {
+    return item.id;
+  }
+
+  filterTransfertsByDate(dateParam: string) {
+    // Convertir la date paramètre en objet Date
+    const [day, month, yearAndTime] = dateParam.split('/');
+    const [year, time] = yearAndTime.split(' ');
+    const [hours, minutes] = time.split(':');
+    const dateToCompare = new Date(
+      parseInt(year, 10),
+      parseInt(month, 10) - 1, // Les mois sont indexés à partir de 0
+      parseInt(day, 10),
+      parseInt(hours, 10),
+      parseInt(minutes, 10)
+    );
+  
+    // Trier les transferts par ordre décroissant de date
+    this.transferts.sort((a: any, b: any) => {
+      const dateA = this.parseDate(a.date).getTime();
+      const dateB = this.parseDate(b.date).getTime();
+  
+      return dateB - dateA; // Tri décroissant
+    });
+  
+    console.log('Transferts triés par date décroissante :', this.transferts);
+  }
+  
+  // Fonction utilitaire pour convertir une date au format "21/03/2025 05:49" en objet Date
+  parseDate(dateString: string): Date {
+    const [day, month, yearAndTime] = dateString.split('/');
+    const [year, time] = yearAndTime.split(' ');
+    const [hours, minutes] = time.split(':');
+    return new Date(
+      parseInt(year, 10),
+      parseInt(month, 10) - 1, // Les mois sont indexés à partir de 0
+      parseInt(day, 10),
+      parseInt(hours, 10),
+      parseInt(minutes, 10)
+    );
+  }
+
+  
+  onFileSelected($event: any){
+    this.fileSCover = $event.target.files[0];
+  }
 
 }

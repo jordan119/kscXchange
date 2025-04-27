@@ -1,7 +1,8 @@
 {
   "projects": {
-    "default": "kscxchange-f9e5a",
-    "dev": "kscxchange-f9e5a"
+    "default": "kscxchange-a703c",
+    "dev": "kscxchange-a703c",
+    "n": "kscxchange-a703c"
   },
   "targets": {},
   "etags": {}

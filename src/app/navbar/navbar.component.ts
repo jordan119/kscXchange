@@ -1,6 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
+import * as bootstrap from 'bootstrap';
 import { Router, RouterModule } from '@angular/router';
 import { AuthServiceService } from '../services/auth-service.service';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -18,8 +21,14 @@ export class NavbarComponent implements OnInit {
   authService = inject(AuthServiceService)
   connectVisible = "d-bloc"
   idUser: any
+  user$ = new BehaviorSubject<any>(null);
 
-  constructor(){}
+  constructor(private afAuth: AngularFireAuth) {
+    this.afAuth.authState.subscribe(user => {
+      this.user$.next(user);
+    });
+  }
+  
   goTo(page: any){    
     this.router.navigate(['/'+page+'']);
     console.log('heee')
@@ -43,4 +52,37 @@ export class NavbarComponent implements OnInit {
     })
 
   }
+
+  closeNav() {
+    const navbarNavDropdown = document.getElementById('navbarNavDropdown');
+    const navbarLogoTitle = document.getElementById('navbarLogoTitle');
+    if (navbarNavDropdown) {
+      const bsCollapse = new bootstrap.Collapse(navbarNavDropdown, {
+        toggle: true
+      });
+      bsCollapse.hide();
+      if (navbarLogoTitle) {
+        navbarLogoTitle.classList.remove('rotate');
+      }
+    }
+  }
+
+  toggleLogoAnimation() {
+    const navbarLogoTitle = document.getElementById('navbarLogoTitle');
+    if (navbarLogoTitle) {
+      navbarLogoTitle.classList.toggle('rotate');
+    }
+  }
+
+  disconnect(){
+    console.log('disconnect')
+    this.afAuth.signOut().then(()=>{
+      this.authService.currentUserSig.set(null)
+      this.firstLetterName = undefined
+      this.idUser = undefined      
+      
+    });
+    this.connectVisible = "d-bloc"
+  }
+
 }

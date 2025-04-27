@@ -1,43 +1,118 @@
-
-nav{
-    height: 60px;
-}
-.img-logo{
-    width: 4rem;
-    height: 40px;
-    object-fit: contain;
+/* filepath: /c:/Users/PROBOOK 450 G3/Documents/ksc x Change/kscXchange/src/app/navbar/navbar.component.scss */
+nav {
+  height: 60px;
 }
 
-.nav-link{
-    color: rgb(1, 96, 112);
-    font-weight: bold;
-    cursor: pointer;
+.img-logo {
+  width: 4rem;
+  height: 40px;
+  object-fit: contain;
+  transition: transform 0.5s ease-in-out;
 }
-.nav-link.active{
-    color: rgb(30, 28, 46);
+
+.img-logo.rotate {
+  animation: rotate 2s infinite linear;
 }
-.navbar-nav{
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.nav-link {
+  color: rgb(1, 96, 112);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.nav-link.active {
+  color: rgb(30, 28, 46);
+}
+
+.navbar-nav {
+  display: flex;
+  justify-content: right;
+}
+
+.nav-item {
+  margin: 0 2rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav-item:hover {
+  transform: scale(1.1);
+}
+
+.btn-connect {
+  width: 2rem;
+  height: 2rem;
+  padding: 0.2rem;
+  border-radius: 50%;
+  text-transform: capitalize;
+  background-color: rgb(30, 28, 46);
+  color: white;
+  font-size: 14px;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-connect:hover {
+  background-color: rgb(19, 90, 19);
+}
+
+@media screen and (max-width: 992px) {
+  .navbar-collapse {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #d4dfee;
+    color: aliceblue;
+    z-index: 1050;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .navbar-collapse.show {
+    transform: translateX(0);
+  }
+
+  .navbar-nav {
     display: flex;
-    justify-content: right;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70%;
+  }
+
+  .nav-item {
+    margin: 1rem 0;
+  }
+
+  .btn-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+  }
+
+  .navbar-title {
+    display: flex;
+    justify-content: center;
+    margin-top: 5rem;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  /* Désactiver l'animation de rotation du logo sur les écrans de petite taille */
+  .img-logo.rotate {
+    animation: none;
+  }
 }
-.nav-item{
-    margin: 0 2rem;
-}
-.btn-connect{
-    width: 2rem;
-    height: 2rem;
-    padding: 0.2rem;
-    border-radius: 50%;
-    text-transform: capitalize;
-    background-color:rgb(30, 28, 46);
-    color: white;
-    font-size: 14px;
-    border: none;
-    transition: all 0.3s ease-in-out;
-}
-.btn-connect:hover{
-    background-color: rgb(19, 90, 19);
-}
-@media screen and (max-width: 650px) {
-    
-}   

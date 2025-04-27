@@ -1,13 +1,11 @@
 <div class="content">
     <div class="titre">
-        <h1>Inscrivez vous</h1>
+        <h1>Inscrivez-vous</h1>
     </div>
     <div class="p-4 content-connect w-100">
-        
         <div class="d-flex justify-content-center align-item-center w-100">
-            <div class="register shadow-lg center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="site__logo " width="56" height="84" viewBox="77.7 214.9 274.7 412"><defs><linearGradient id="a" x1="0%" y1="0%" y2="0%"><stop offset="0%" stop-color="#8ceabb"/><stop offset="100%" stop-color="#378f7b"/></linearGradient></defs><path fill="url(#a)" d="M215 214.9c-83.6 123.5-137.3 200.8-137.3 275.9 0 75.2 61.4 136.1 137.3 136.1s137.3-60.9 137.3-136.1c0-75.1-53.7-152.4-137.3-275.9z"/></svg>
-                
+            <div class="register shadow-lg center mt-5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="site__logo " width="46" height="74" viewBox="77.7 214.9 274.7 412"><defs><linearGradient id="a" x1="0%" y1="0%" y2="0%"><stop offset="0%" stop-color="#8ceabb"/><stop offset="100%" stop-color="#378f7b"/></linearGradient></defs><path fill="url(#a)" d="M215 214.9c-83.6 123.5-137.3 200.8-137.3 275.9 0 75.2 61.4 136.1 137.3 136.1s137.3-60.9 137.3-136.1c0-75.1-53.7-152.4-137.3-275.9z"/></svg>
                 <h2>Inscription</h2>
                 @if (errOrder) {
                     <div class="alert alert-primary" role="alert">
@@ -18,49 +16,61 @@
                     <div class="row">
                         <div class="col mb-3">
                             <label class="form-label">Nom <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" [(ngModel)]="nom">
+                            <input type="text" class="form-control" [(ngModel)]="nom" (input)="controlPass()">
                         </div>
                         <div class="col mb-3">
                             <label class="form-label">Prénom <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" [(ngModel)]="prenom">
+                            <input type="text" class="form-control" [(ngModel)]="prenom" (input)="controlPass()">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col mb-3">
-                            <label class="form-label">Nom d'utilisateur <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" [(ngModel)]="username">
+                            <label class="form-label">User Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="username" (input)="controlPass()">
                         </div>
                         <div class="col mb-3">
                             <label class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" [(ngModel)]="email">
+                            <input type="text" class="form-control" [(ngModel)]="email" (input)="controlPass()">
                             @if (errEmail) {<span class="text-danger">{{errEmail}}</span>}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col mb-3">
-                            <label class="form-label">pays <span class="text-danger">*</span></label>
-                            <select class="form-select" [(ngModel)]="codeTel">
+                            <label class="form-label">Pays <span class="text-danger">*</span></label>
+                            <select class="form-select" [(ngModel)]="codeTel" (change)="controlPass()">
                                 @for (pays of countries; track $index) {
                                     <option value="{{pays.code}}">{{pays.country+', '+pays.code}}</option>
                                 }                                
                             </select>
                         </div>
                         <div class="col mb-3">
-                            <label class="form-label">Telephone <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" [(ngModel)]="tel">
+                            <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="tel" (input)="controlPass()">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col mb-3">
-                            <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control" [(ngModel)]="password">
+                            <label class="form-label">Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" [(ngModel)]="password" (input)="controlPass()">
+                            <span class="text-danger">{{errMessage}}</span>
                         </div>
                         <div class="col mb-3">
-                            <label class="form-label">Confirmer le mot de passe <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control" [(ngModel)]="confirmPassword">
+                            <label class="form-label">Confirm password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" [(ngModel)]="confirmPassword" (input)="controlPass()">
+                            <span class="text-danger">{{errMessage}}</span>
                         </div>
                     </div>
-                    <button class="btn btn-info w-100" (click)="login()" [disabled]="laoding">
+                    <div class="col mb-3">
+                        <label class="form-label">Avez-vous un code d'affiliation? Entrez-le ici </label>
+                        <input type="text" class="form-control" [(ngModel)]="affCode">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="termsCheck" [(ngModel)]="termsAccepted">
+                        <label class="form-check-label" for="termsCheck">
+                            J'accepte les <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">conditions d'utilisation</a>
+                        </label>
+                    </div>
+                    <button class="btn btn-info w-100" (click)="login()" [disabled]="!termsAccepted || laoding || controlPass() !== 'valide'">
                         Valider
                         @if (laoding) {
                             <div class="spinner-border spinner-border-sm" role="status">
@@ -69,11 +79,62 @@
                         }
                     </button>
                 </div>
-                
-                <p class="text-white" >Vous avez déjà un compte? <a (click)="goTo('login')"  class="text-info">connectez vous</a></p>
-            
+                <p class="text-white">Vous avez déjà un compte? <a (click)="goTo('login')" class="text-info">Connectez-vous</a></p>
             </div>
-        
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Politique</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h2>Conditions générales d'utilisation</h2>
+                <p>Termes et conditions</p>
+                <p> Cet accord concerne kscxchange et ses conditions d'utilisation du site dans leur intégralité et remplace toute autre stratégie écrite ou orale. Cet accord définit les conditions d'utilisation auxquelles tous les clients consentent lorsqu'ils optent pour des services avec kscxchange. Kscxchange revendique le droit exclusif de modifier, changer ou altérer toute partie de cet accord à tout moment, sans préavis aux clients. Les clients utilisant les services fournis par kscxchange acceptent d'être limités par et doivent accepter toutes les approches de ces CGU. À la seule discrétion de kscxchange, tout contrevenant à ces CGU peut voir son compte supprimé sans remboursement ou éventuellement, si cela est jugé approprié, être légalement poursuivi.</p>
+
+                <h3>Dispositions générales</h3>
+                <p>Avant d'utiliser l'un de nos services, vous acceptez ces accords et vous assurez de les respecter.</p>
+
+                <h3>Définitions</h3>
+                <p>Dans les présentes conditions générales, de nombreuses expressions seront utilisées pour s'adresser à nous et à vous. Définitions « Nous », « Nos » ou « Fournisseur » ou « service » ou « kscxchange et son sites ». « Vous », « Votre » « Client » « Client » ou « Utilisateur ».</p>
+
+                <h3>Traitement, délais et notifications</h3>
+                <p>Nous faisons un effort honnête pour traiter toutes les commandes le jour même ou dans les 24 heures. Néanmoins, pour certaines raisons telles que la pénurie, la demande supérieure à l'offre, l'accessibilité et bien d'autres, les commandes peuvent être reportées. Nous pouvons annuler ou rejeter votre commande si nous détectons des activités frauduleuses ou suspectes ou pour toute autre raison. Vous acceptez d'être patient et de ne pas utiliser de mots dangereux ou blessants envers l'un de nos employés ou délégués.</p>
+
+                <h3>Authentification des informations</h3>
+                <p>Nous nous efforcerons de fournir des informations exactes et de traiter avec exactitude les informations que vous nous fournissez. Nous ne serons pas responsables de l'utilisation ou de l'utilisation de détails de compte ou d'informations erronés fournis par vous. Nous ne serons pas non plus responsables de toute information affichée à tort sur l'un de nos sites.</p>
+
+                <h2>Politique de confidentialité</h2>
+                <h3>Informations que nous collectons</h3>
+                <p>Nous pouvons partager vos informations avec des prestataires de services de confiance pour faciliter nos services. Nous veillons à ce que ces partenaires maintiennent le même niveau de protection et de sécurité des données que nous. De plus, nous pouvons divulguer des informations comme l'exige la loi ou pour protéger nos droits et intérêts.</p>
+
+                <h3>Comment nous utilisons vos informations</h3>
+                <p>Kscxchange peut partager vos informations avec des prestataires de services de confiance pour faciliter nos services. Nous veillons à ce que ces partenaires maintiennent le même niveau de protection et de sécurité des données que nous. De plus, nous pouvons divulguer des informations si nécessaire.</p>
+
+                <h3>Partage de vos informations</h3>
+                <p>Nous pouvons partager vos informations avec des prestataires de services de confiance pour faciliter nos services. Nous veillons à ce que ces partenaires maintiennent le même niveau de protection et de sécurité des données que nous. De plus, nous pouvons divulguer des informations comme l'exige la loi ou pour protéger nos droits et intérêts.</p>
+
+                <h3>Mesures de sécurité</h3>
+                <p>Nous mettons en œuvre des mesures de sécurité conformes aux normes de l’industrie pour protéger vos informations contre tout accès, modification ou divulgation non autorisés. Cependant, sachez qu'aucune transmission de données sur Internet n'est entièrement sécurisée.</p>
+
+                <h3>Vos choix</h3>
+                <p>Vous avez le droit de mettre à jour ou de corriger vos informations, de refuser les communications marketing et de demander la suppression de vos données. Veuillez nous contacter pour exercer ces droits.</p>
+
+                <h3>Modifications apportées à cette politique</h3>
+                <p>Nous pouvons mettre à jour notre politique de confidentialité à mesure que nos pratiques évoluent. Nous vous informerons de tout changement important et fournirons la politique mise à jour sur notre site Web.</p>
+
+                <h3>Contactez-nous</h3>
+                <p>Si vous avez des questions ou des préoccupations concernant notre politique de confidentialité ou nos pratiques en matière de données, veuillez nous contacter.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary">Compris</button>
+            </div>
         </div>
     </div>
 </div>

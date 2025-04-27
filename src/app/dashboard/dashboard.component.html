@@ -2,7 +2,19 @@
     <div class="titre">
         <h1>Tableau de Bord</h1>
     </div>
-    <div class="p-4">
+    <div class="table-responsive">
+        @if (admin) {
+            <button class="btn btn-success w-100 mt-4" (click)="goTo('/admin')">
+                <i class="bi bi-person"></i>
+                Espace Administrateur                      
+            </button>
+        }
+        <button class="btn btn-primary w-100 mt-4" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
+            <i class="bi bi-plus-circle"></i>
+            Initier un transfert                        
+        </button>
+       
+        
         <table class="table table-dark table-striped text-white mt-4">
             <thead>
                 <tr>
@@ -16,17 +28,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td colspan="7" class="center px-4">
-                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                            <i class="bi bi-plus-circle"></i>
-                            Initier un transfert                        
-                        </button>
-                    </td>
-                </tr>
                 @for (transfert of transferts; track $index) {
                     <tr>
-                        <th>{{transfert.num}}</th>
+                        <th>{{$index}}</th>
                         <td>{{transfert.montant}}</td>
                         <td><span class="badge bg-{{transfert.couleur}}">{{transfert.etat}}</span></td>
                         <td>{{transfert.date}}</td>
@@ -52,6 +56,7 @@
             </tbody>
         </table>
     </div>
+
     <h1 class="text-warning my-4 text-center">Statistique</h1>
     <div class="p-4 text-white option-container">
         <div class="card bg-info">
@@ -75,7 +80,6 @@
                     <i class="bi bi-reception-1 text-danger"></i>
                 </div>
             </div>
-            
         </div>
         <div class="card bg-success">
             <div class="card-dash">
@@ -87,7 +91,6 @@
                     <i class="bi bi-check-circle-fill text-success"></i>
                 </div>
             </div>
-            
         </div>
         <div class="card bg-danger">
             <div class="card-dash ">
@@ -99,7 +102,6 @@
                     <i class="bi bi-x-circle-fill text-warning"></i>
                 </div>
             </div>
-            
         </div>
     </div>
 </div>
@@ -108,7 +110,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header bg-info">
-          <h5 class="modal-title" id="staticBackdropLabel">Initier un tranfert</h5>
+          <h5 class="modal-title" id="staticBackdropLabel">Initier un transfert</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -118,83 +120,221 @@
                 </div>
             }
             
-            <div class="card card-change border-0 shadow">
-                <div class="card-body border-0">
-                    <table class="table border-0 table-dark table-striped">
-                        <thead class="border-0">
-                            <tr class="text-center">
-                            <th scope="col">Envoyer</th>
-                            <th scope="col">Recevoir</th>
-                            </tr>
-                        </thead>
-                        <tbody class="border-0">
-                            <tr>
-                                <td>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" [(ngModel)]="montantSend" (input)="applyTaux()">
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" [(ngModel)]="montantRec" disabled>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="col-sm-10">
-                                        <select class="form-select" [(ngModel)]="opSend" (change)="applyTaux()">
-                                            @for (monaie of monaies; track $index) {
+            @if (step == 1) {
+                <div class="card card-change border-0 shadow">
+                    <div class="card-body border-0">
+                        
+                        <div class="img-contain d-flex justify-content-between">
+                            <img src="{{logoSender}}" class="img-logo" *ngIf="logoSender">
+                            <img src="../../assets/xchangelog.avif" class="img-logo" *ngIf="logoReciever || logoSender">
+                            <img src="{{logoReciever}}" class="img-logo" *ngIf="logoSender">
+                        </div>
+                        <div class="d-flex flex-column flex-md-row bg-dark text-white p-2">
+                            <div class="d-flex flex-column col-md-6">
+                                <div class="text-center"><strong>Envoyer</strong></div>
+                                <div class="p-2">
+                                    <input type="text" class="form-control" [(ngModel)]="montantSend" (input)="applyTaux()">
+                                </div>
+                                <div class="p-2">
+                                    <select class="form-select" [(ngModel)]="opSend" (change)="applyTaux(); updateOperator('send', $event)">
+                                        @for (monaie of monaies; track $index) {
+                                            @if (monaie.typeMonaie === 'emetteur' || monaie.typeMonaie === 'all') {
                                                 <option value="{{monaie.id}}">{{monaie.operateur+'('+monaie.pays+')'}}</option>
-                                            }                                            
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="col-sm-10">
-                                        <select class="form-select" [(ngModel)]="opRe" (change)="applyTaux()">
-                                            @for (monaie of monaies; track $index) {
-                                                <option value="{{monaie.id}}">{{monaie.operateur+'('+monaie.pays+')'}}</option>
-                                            } 
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="p-2">
-                        @if (monaieR && tauxApplicable && monaieR) {
-                            <h4>1 {{monaieS}} = {{tauxApplicable+" "+monaieR}}</h4>
-                        }@else {
-                            <div class="spinner-grow" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                                            }
+                                        }
+                                    </select>
+                                </div>
                             </div>
-                        }                        
+                            <div class="d-flex flex-column col-md-6">
+                                <div class="text-center"><strong>Recevoir</strong></div>
+                                <div class="p-2">
+                                    <input type="text" class="form-control" [(ngModel)]="montantRec" disabled>
+                                </div>
+                                <div class="p-2">
+                                    <select class="form-select" [(ngModel)]="opRe" (change)="applyTaux(); updateOperator('receive', $event)">
+                                        @for (monaie of monaies; track $index) {
+                                            @if (monaie.typeMonaie === 'recepteur' || monaie.typeMonaie === 'all') {
+                                                <option value="{{monaie.id}}">{{monaie.operateur+'('+monaie.pays+')'}}</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-2 w-100 text-center">
+                            @if (monaieR && tauxApplicable && monaieR) {
+                                <h4>1 {{monaieS}} = {{tauxApplicable+" "+monaieR}}</h4>
+                            }@else {
+                                <div class="spinner-grow text-center" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            }                        
+                        </div>
+                        <h5>Information Sur le destinataire</h5>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" [(ngModel)]="nomR" placeholder="Nom et prénom">
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-4">
+                                    <select class="form-select" [(ngModel)]="telRCode">
+                                        @for (country of countries; track $index) {
+                                            <option [value]="country.code">{{country.code}} ({{country.country}})</option>
+                                        }  
+                                    </select>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" class="form-control" [(ngModel)]="telR" placeholder="Numéro de téléphone">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="mt-4">Information Sur l'expéditeur</h5>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-4">
+                                    <select class="form-select" [(ngModel)]="numECode">
+                                        @for (country of countries; track $index) {
+                                            <option [value]="country.code">{{country.code}} ({{country.country}})</option>
+                                        }  
+                                    </select>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" class="form-control" [(ngModel)]="numE" placeholder="Numéro pour le paiement">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-4">
+                                    <select class="form-select" [(ngModel)]="whatECode">
+                                        @for (country of countries; track $index) {
+                                            <option [value]="country.code">{{country.code}} ({{country.country}})</option>
+                                        }                                            
+                                    </select>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" class="form-control" [(ngModel)]="whatE" placeholder="Numéro WhatsApp">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" [(ngModel)]="nomTelE" placeholder="Nom Lié au numéro">
+                        </div>
+                    
+                        
+                        
                     </div>
-                    <h5>Information Sur le recepteur</h5>
-                    <div class="mb-3">
-                        <input type="text" class="form-control" [(ngModel)]="nomR" placeholder="Nom et prénom">
-                    </div>
-                    <div class="mb-3">
-                        <input type="text" class="form-control" [(ngModel)]="telR" placeholder="numero de téléphone">
+                    <div class="card-footer border-0">
+                        <button class="btn btn-warning w-100 mb-2" (click)="next()">Suivant</button>
+                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal" >Annuler</button>
                     </div>
                 </div>
-                <div class="card-footer border-0">
-                    <button class="btn btn-warning w-100 mb-2" (click)="addTransfert()" [disabled]="isAddingTrans">
-                        Initier le transfert
-                        @if(isAddingTrans){
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
+            }
+            @if (step == 2) {
+                <div>
+                    <h4 class="text-success my-4">Information sur le recepteur</h4>
+                    @if(opRe === bancRMB || opRe === bancIvoire || opRe === bancCameroun  || opRe === bancGhana) {
+                        <div class="m-2">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" [(ngModel)]="nomCompte" placeholder="Nom du compte">
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" [(ngModel)]="numeroCarte" placeholder="Numéro de la carte bancaire">
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" [(ngModel)]="nomBanque" placeholder="Nom de la banque">
+                            </div>
+                        </div>
+                    }
+                    
+                    @if (opRe === Alipay) {
+                        <div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" [(ngModel)]="numeroAlipay" placeholder="Numéro de téléphone ou email Alipay">
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" [(ngModel)]="nomCompletAlipay" placeholder="Nom complet Alipay">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Code Qr</label>
+                                <input type="file" class="form-control" [(ngModel)]="codeQrAlipay" accept="image/*">
+                            </div>
+                        </div>
+                    }
+                    
+                    @if (opRe === usdt || opRe === usdt2) {
+                        <div class="mb-3">
+                            <input type="text" class="form-control" [(ngModel)]="adresseUsdt" placeholder="Adresse USDT_trc20">
+                        </div>
+                    }
+                    @if (opRe === paypal) {
+                        <div class="mb-3">
+                            <input type="text" class="form-control" [(ngModel)]="courrierPaypal" placeholder="Email Paypal">
+                        </div>  
+                        <div class="mb-3">
+                            <input type="text" class="form-control" [(ngModel)]="nomPaypal" placeholder="Nom">
+                        </div> 
+                        <div class="mb-3">
+                            <input type="text" class="form-control" [(ngModel)]="telPaypal" placeholder="Numéro whatsapp avec indicateur téléphonique">
+                        </div> 
+                    }
+                    <button class="btn btn-warning w-100 mb-2" (click)="next()">
+                        Suivant
+                    </button>
+                    <button type="button" class="btn btn-secondary w-100" (click)="previousStep()">Retour</button>
+                </div>
+            }
+
+            @if (step == 3) {
+                <div class="card confirm-informations border-0 shadow">
+                    <div class="card-body border-0">
+                        <h4 class="text-success">Récapitulatif</h4>
+                        <p><strong>Montant à envoyer :</strong> {{montantSend}} {{monaieS}}</p>
+                        <p><strong>Montant à recevoir :</strong> {{montantRec}} {{monaieR}}</p>
+                        <p><strong>Nom du récepteur :</strong> {{nomR}}</p>
+                        <p><strong>Numéro de téléphone du récepteur :</strong> {{telRCode}} {{telR}}</p>
+                        @if (opRe === bancRMB || opRe === bancIvoire || opRe === bancCameroun  || opRe === bancGhana) {
+                            <div class="my-5">
+                                <h4 class="text-success"> Infos sur le compte bancaire</h4>
+                                <p><strong>Nom du compte :</strong> {{nomCompte}}</p>
+                                <p><strong>Numéro de la carte bancaire :</strong> {{numeroCarte}}</p>
+                                <p><strong>Nom de la banque :</strong> {{nomBanque}}</p>
                             </div>
                         }
-                    </button>
-                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal" >Anuler</button>
+                        @if (opRe === Alipay) {
+                            <div class="my-5">
+                                <h4 class="text-success">Information Alipay</h4>
+                                <p><strong>Numéro de téléphone ou email Alipay :</strong> {{numeroAlipay}}</p>
+                                <p><strong>Nom complet Alipay :</strong> {{nomCompletAlipay}}</p>
+                                <p><strong>Code QR Alipay :</strong> {{codeQrAlipay}}</p>
+                            </div>
+                        }
+
+                        <h4 class="text-success my-4">Information sur l'expéditeur</h4>
+                        <p><strong>Numéro :</strong> {{numECode}} {{numE}}</p>
+                        <p><strong>WhatsApp :</strong> {{whatECode}} {{whatE}}</p>
+                        <p><strong>Nom du numéro :</strong> {{nomTelE}}</p>
+
+                        <button class="btn btn-success w-100 mb-2" (click)="addTransfert()" [disabled]="isAddingTrans">
+                            Confirmer le transfert
+                            @if(isAddingTrans){
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            }
+                        </button>
+                        <button type="button" class="btn btn-secondary w-100" (click)="previousStep()">Retour</button>
+                    </div>
+                    
                 </div>
-            </div>
+            }
+            
         </div>
       </div>
     </div>
 </div>
+
 <div class="modal modal-lg fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -203,7 +343,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">            
-            
         </div>
       </div>
     </div>

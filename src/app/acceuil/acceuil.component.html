@@ -7,7 +7,7 @@
             <button class="btn btn-info" (click)="goTo('dash')">Commencer</button>
         </div>
     </div>
-    <div class="p-4 center" id="transfert">
+    <div class="p-2 center" id="transfert">
         <div class="card card-change">
             <div class="card-body border-0">
                 @if (errChange !="" ) {
@@ -15,48 +15,43 @@
                         {{errChange}}
                     </div>
                 }
-                <table class="table border-0 table-dark table-striped">
-                    <thead class="border-0">
-                        <tr class="text-center">
-                        <th scope="col">Envoyer</th>
-                        <th scope="col">Recevoir</th>
-                        </tr>
-                    </thead>
-                    <tbody class="border-0">
-                        <tr>
-                            <td>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" value="0" [(ngModel)]="montantSend" (input)="applyTaux()">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="col-sm-10">
-                                    <input type="number" class="form-control" value="0" [(ngModel)]="montantRec" disabled>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="col-sm-10">
-                                    <select class="form-select" [(ngModel)]="opSend" (change)="applyTaux()">
-                                        @for (monaie of monaies; track $index) {
-                                            <option value="{{monaie.id}}">{{monaie.operateur+'('+monaie.pays+')'}}</option>
-                                        } 
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="col-sm-10">
-                                    <select class="form-select" [(ngModel)]="opRe" (change)="applyTaux()">
-                                        @for (monaie of monaies; track $index) {
-                                            <option value="{{monaie.id}}">{{monaie.operateur+'('+monaie.pays+')'}}</option>
-                                        }                                        
-                                    </select>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="img-contain d-flex justify-content-between">
+                    <img src="{{logoSender}}" class="img-logo" *ngIf="logoSender">
+                    <img src="../../assets/xchangelog.avif" class="img-logo" *ngIf="logoReciever || logoSender">
+                    <img src="{{logoReciever}}" class="img-logo" *ngIf="logoSender">
+                </div>
+                <div class="d-flex flex-column flex-md-row ">
+                    <div class="d-flex flex-column col-md-6">
+                        <div class="text-center text-white"><strong>Envoyer</strong></div>
+                        <div class="p-2">
+                            <input type="text" class="form-control" value="0" [(ngModel)]="montantSend" (input)="applyTaux()">
+                        </div>
+                        <div class="p-2">
+                            <select class="form-select" [(ngModel)]="opSend" (change)="applyTaux(); updateOperator('send', $event)">
+                                @for (monaie of monaies; track $index) {
+                                    @if (monaie.typeMonaie === 'emetteur' || monaie.typeMonaie === 'all') {
+                                        <option value="{{monaie.id}}">{{monaie.operateur+'('+monaie.pays+')'}}</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column col-md-6">
+                        <div class="text-center text-white"><strong>Recevoir</strong></div>
+                        <div class="p-2">
+                            <input type="number" class="form-control" value="0" [(ngModel)]="montantRec" disabled>
+                        </div>
+                        <div class="p-2">
+                            <select class="form-select" [(ngModel)]="opRe" (change)="applyTaux(); updateOperator('receive', $event)">
+                                @for (monaie of monaies; track $index) {
+                                    @if (monaie.typeMonaie === 'recepteur' || monaie.typeMonaie === 'all') {
+                                        <option value="{{monaie.id}}">{{monaie.operateur+'('+monaie.pays+')'}}</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div class="p-2 text-white">
                     @if (monaieR && tauxApplicable && monaieR) {
                         <h4>1 {{monaieS}} = {{tauxApplicable}}</h4>
@@ -66,20 +61,14 @@
                         </div>
                     }                        
                 </div>
-                <!--
-                    <div class="around">
-                        <div><img src="https://seeklogo.com/images/O/orange-money-logo-8F2AED308D-seeklogo.com.png" class="logo-currency"></div>
-                        <div><img src="https://cdn4.iconfinder.com/data/icons/finance-174/128/arrows_left_exchange_right_finace_money_business_seo-512.png" class="logo-currency"></div>
-                        <div><img src="https://seeklogo.com/images/O/orange-money-logo-8F2AED308D-seeklogo.com.png" class="logo-currency"></div>
-                    </div>
-                -->
+                
             </div>
             <div class="card-footer border-0">
                 <button class="btn btn-warning w-100"(click)="swapp()">Swapp currency</button>
             </div>
         </div>
     </div>
-    <div class="second p-4 text-light">
+    <div class="second p-2 text-light">
         <div class="text-center">
             <h3 class="text-warning">Processus</h3>
             <h1>Comment ca marche?</h1>
@@ -162,59 +151,33 @@
         </table>
     </div>
 
-    <div class="p-4 text-light mt-4">
-        <div class="text-center">
-            <h3 class="text-warning">FaQs</h3>
-            <h1>Questions fréquentes</h1>
-            <p>Qu’aimerez-vous savoir ? Obtenez quelques réponses ci-dessous !</p>
-        </div>
-        <div class="container-about center">
-            <div class="accordion my-4" id="accordionExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Puis-je utiliser le compte d'une autre personne pour effectuer des paiements ou des dépôts sur votre plateforme 
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            Gardez toujours cela à l’esprit, nous n’acceptons aucun tiers sur aucun de nos comptes, votre nom sur notre plateforme doit correspondre au nom que vous utilisez pour nous envoyer de l’argent.
-                            Mais nous pouvons vous aider à payer/approvisionner un autre compte en votre nom, cela ne va pas à l'encontre de nos conditions de services. Par exemple, nous pouvons financer le compte de votre (vos) fournisseur(s) s'il ne figure pas à votre nom. Vous avez encore besoin de précisions supplémentaires, contactez-nous au support en direct ou par courrier.
+    @if (faqs.length >0) {
+        <div class="p-4 text-light mt-4">
+            <div class="text-center">
+                <h3 class="text-warning">FaQs</h3>
+                <h1>Questions fréquentes</h1>
+                <p>Qu’aimerez-vous savoir ? Obtenez quelques réponses ci-dessous !</p>
+            </div>
+            <div class="container-about center">
+                <div class="accordion my-4" id="accordionExample">
+                    @for (faq of faqs; track $index) {
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{$index}}">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + $index" aria-expanded="true" [attr.aria-controls]="'collapse' + $index">
+                                    {{faq.question}}
+                                </button>
+                            </h2>
+                            <div id="collapse{{$index}}" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading' + $index" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    {{faq.reponse}}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingTwo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Êtes-vous disponible pour répondre aux questions à tout moment ?
-                        </button>
-                    </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <p>
-                                Nous fournissons une assistance 24h/24 et 7j/7 et une mise à jour rapide de vos transactions.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingThree">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            Quel est le processus pour connaître l'équivalent d'une devise dans une autre ?
-                        </button>
-                    </h2>
-                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <p>
-                                Le taux est calculé en fonction des mouvements du marché, utilisez le calculateur de swap de devises pour vérifier le taux en sélectionnant votre devise d'envoi et votre devise de réception, tapez le montant que vous souhaitez échanger, le calculateur vous donnera l'équivalent dans une autre devise. Ne vous inquiétez pas, nous mettons à jour les tarifs de temps en temps pour vous offrir le meilleur tarif jamais vu.
-                            </p>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
-            
         </div>
-    </div>
+    }
 
     <div class="p-4 text-light">
         <div class="text-center">
@@ -242,50 +205,56 @@
             </div>
             <div class="card bg-dark p-4 text-light shadow-lg">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">MASSOH</h5>
+                    <h5 class="mb-1">Hidima</h5>
                     <small>3 days ago</small>
                 </div>
                 <div><span class="text-info">Custumer</span></div>
                 
-                <p class="mb-1">J'adore ce service. Vous etes efficace et le service client est juste wahouu.</p>
+                <p class="mb-1">very trustable. I like it</p>
                 <div class="note d-flex">
                     <i class="bi bi-star-fill text-warning"></i>
                     <i class="bi bi-star-fill text-warning"></i>
                     <i class="bi bi-star-fill text-warning"></i>
                     <i class="bi bi-star-fill text-warning"></i>
-                    <i class="bi bi-star-fill text-white"></i>
+                    <i class="bi bi-star text-white"></i>
                 </div>
             </div>
             <div class="card bg-dark p-4 text-light shadow-lg">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">MASSOH</h5>
-                    <small>3 days ago</small>
+                    <h5 class="mb-1">Habdel</h5>
+                    <small>4 hours ago</small>
                 </div>
                 <div><span class="text-info">Custumer</span></div>
                 
-                <p class="mb-1">J'adore ce service. Vous etes efficace et le service client est juste wahouu.</p>
+                <p class="mb-1">Merci pour ce moyen de transfert d'argents en chine. J'en avais vraiment besoin</p>
                 <div class="note d-flex">
                     <i class="bi bi-star-fill text-warning"></i>
                     <i class="bi bi-star-fill text-warning"></i>
                     <i class="bi bi-star-fill text-white"></i>
-                    <i class="bi bi-star-fill text-white"></i>
-                    <i class="bi bi-star-fill text-white"></i>
+                    <i class="bi bi-star text-white"></i>
+                    <i class="bi bi-star text-white"></i>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="message center flex-column" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <!--
+        <div class="message center flex-column" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <div class="fs-1 center text-info position-relative">
+                <i class="bi bi-chat-dots-fill"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-small">
+                    {{messages.length}}
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+            </div>        
+        </div>  
+    -->
+    <div class="message center flex-column" (click)="goToWhatsapp()">
         <div class="fs-1 center text-info position-relative">
-            <i class="bi bi-chat-dots-fill"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-small">
-                {{messages.length}}
-                <span class="visually-hidden">unread messages</span>
-            </span>
+            <i class="bi bi-whatsapp fs-2"></i>
         </div>        
-    </div>
+    </div>  
 </div>
-<div class="modal modal-xl fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal modal-xl fade" id="staticBackdrop" (shown.bs.modal)="onModalOpen()"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header bg-info">
@@ -295,7 +264,7 @@
         <div class="modal-body position-relative bg-dark">
             @if (idUser) {
                 <div class="receiver">
-                    <div class="msg-box">
+                    <div class="msg-box  bg-re">
                         HI. Comment pouvons nous vous aider?
                     </div>
                     
@@ -306,25 +275,23 @@
                     @for (msg of messages; track $index) {
                         @if (msg.admin) {
                             <div class="receiver">
-                                <div class="msg-box">
+                                <div class="msg-box bg-re">
                                     {{msg.message}}
                                 </div>
-                                
+                                <span class="text-white-50 time">{{msg.time}}</span>
                             </div>
                         }@else {
                             <div class="sender">
-                                
-                                <div class="msg-box">
+                                <div class="msg-box bg-se">
                                     {{msg.message}}
                                 </div>
+                                <span class="text-white-50 time">{{msg.time}}</span>
                             </div>
                         }
-                        
-                        
                     }
                     
                 }
-                
+                <div id="end-msg"></div>
             }@else {
                 <div class="w-100 p-5 text-white">
                     <h2>Vous devez créer un compte avant de lancer la discussion.</h2>

@@ -4,10 +4,12 @@ import { ApiService } from '../services/api.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -17,20 +19,21 @@ export class DashboardComponent implements OnInit {
   constructor(
     public Auth : AngularFireAuth,
     public apiservice: ApiService,
-    public firestore: AngularFirestore
+    public firestore: AngularFirestore,
+    private http: HttpClient
   ){}
 
   ngOnInit(){
     this.getAuth()
     
     this.getMonaie()
-    
+    this.fetchCountryDialCodes()
   }
+
   goTo(route: any){
     this.router.navigate(['/'+route+'']);
   }
 
-  
   idUser: any; nom: any
   getAuth(){
     this.Auth.authState.subscribe(auth=>{
@@ -45,30 +48,38 @@ export class DashboardComponent implements OnInit {
     })
   }
   
-  
+  admin = false
   getProfile(){
     this.firestore.collection('profiles', ref=>ref.where('idUser', '==', this.idUser)).get().subscribe(profiles=>{
       profiles.forEach((profile: any)=>{
         this.tel = profile.data()['tel']
-        console.log(this.tel)
+        //console.log(profile.data()['admin'])
+        if(profile.data()['admin']){
+          this.admin = true
+        }
       })
     })
   }
-
-  
 
   cniRecto: any; cniVerso: any; selfie: any
   updateProfile(){
     
   }
+
   tel: any; opRe: any; opSend: any; montantSend = 0; montantRec: any
-  isAddingTrans = false; msgErr: any= ""; nomR: any; telR: any
-  addTransfert(){
-    console.log(this.opRe+" "+this.opSend+" "+this.monaieS+" "+this.monaieR+this.nomR+this.tauxApplicable+this.idUser+this.tel)
-    if(this.opRe && this.opSend && this.montantSend && this.nomR && this.telR){
-      console
-      this.isAddingTrans = true
-      this.msgErr = ""
+  isAddingTrans = false; msgErr: any= ""; nomR: any; telR: any; emailR: any=""
+  telRCode: any ="+237"; numECode:any  ="+237"; whatECode : any="+237"
+  addTransfert() {
+    console.log(this.opRe + " " + this.opSend + " " + this.monaieS + " " + this.monaieR + this.nomR + this.tauxApplicable + this.idUser + this.tel);
+    if (this.opRe && this.opSend && this.montantSend && this.nomR && this.telR) {
+      this.isAddingTrans = true;
+      this.msgErr = "";
+  
+      // Concaténer les indicatifs téléphoniques avec les numéros de téléphone
+      const fullTelR = `${this.telRCode} ${this.telR}`;
+      const fullNumE = `${this.numECode} ${this.numE}`;
+      const fullWhatE = `${this.whatECode} ${this.whatE}`;
+  
       this.firestore.collection('transferts').add({
         tel: this.tel,
         recepteur: this.opRe,
@@ -80,29 +91,46 @@ export class DashboardComponent implements OnInit {
         taux: this.tauxApplicable,
         idUser: this.idUser,
         nomRecepteur: this.nomR,
-        telRecepteur: this.telR,
+        telRecepteur: fullTelR,
+        emailRecepteur: this.emailR,
         monaieSender: this.monaieS,
-        monaieRecepteur: this.monaieR
-      }).then(()=>{
-        alert('Votre transfert a été recut. Nous communiquerons avec vous pour la suite')
-        this.isAddingTrans = false
-        this.opRe =""; this.opSend = ""; this.montantSend=0; this.nomR = ""; this.telR=""; 
-        this.montantRec =0; this.monaieR = ""; this.monaieS = ""; this.tauxApplicable = ""
-        this.getTransfert()
-      })
-    }else{
-      this.errChange = 'remplissez toutes les informations'
+        monaieRecepteur: this.monaieR,
+
+        //banque
+        nomCompte: this.nomCompte,
+        numeroCarte: this.numeroCarte,
+        nomBanque: this.nomBanque,
+
+        numeroAlipay: this.numeroAlipay,
+        nomCompletAlipay: this.nomCompletAlipay,
+        codeQrAlipay: this.codeQrAlipay,
+        adresseUsdt: this.adresseUsdt,
+        courrierPaypal: this.courrierPaypal,
+        nomPaypal: this.nomPaypal,
+        telPaypal: this.telPaypal,
+        // Informations sur l'expéditeur
+        numE: fullNumE,
+        whatE: fullWhatE,
+        nomTelE: this.nomTelE
+      }).then(() => {
+        alert('Votre transfert a été reçu. Nous communiquerons avec vous pour la suite');
+        this.isAddingTrans = false;
+        this.resetForm();
+        this.getTransfert();
+      });
+    } else {
+      this.errChange = 'Remplissez toutes les informations';
     }
   }
   
   transferts: any = []; nbreEncour = 0; nbreSuccess = 0; nbreEchec = 0 
   getTransfert(){
     this.firestore.collection('transferts', ref=>ref.where('idUser', '==', this.idUser)).get().subscribe(transferts=>{
-      let num = 0; let couleur = ""; this.transferts = []
+      let num = 0; this.transferts = []
       this.nbreEncour = 0; this.nbreSuccess = 0; this.nbreEchec = 0
 
       transferts.forEach((transfert: any)=>{
-        num++
+        num++; let couleur = ""
         if(transfert.data()['etat']=="en cour"){
           couleur="primary"
           this.nbreEncour++
@@ -133,7 +161,7 @@ export class DashboardComponent implements OnInit {
           monaieSender: transfert.data()['monaieSender'],
         })
       })
-      console.log(this.transferts)
+      //console.log(this.transferts)
     })
   }
 
@@ -277,22 +305,42 @@ export class DashboardComponent implements OnInit {
     // Retourner la date formatée
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   }
-  monaies: any = []
-  async getMonaie(){
-    this.firestore.collection('devises').get().subscribe(monaies => {
-      this.monaies= []
-      monaies.forEach((monaie: any) => {   
-        this.monaies.push({
-          id: monaie.id,
-          monaie: monaie.data()['monaie'],
-          pays: monaie.data()['pays'],
-          operateur: monaie.data()['operateur'],
 
-        })    
-      })
-      console.log(this.monaies)
-    })
+  monaies: any = [];
+
+  async getMonaie() {
+    this.firestore.collection('devises').get().subscribe(monaies => {
+      this.monaies = [];
+      const promises: any = [];
+  
+      monaies.forEach((monaie: any) => {
+        const data = monaie.data();
+
+        if (data['typeMonaie'] !== undefined && data['priorite'] !== undefined && data['typeMonaie'] !== 'invisible') {
+          const promise = new Promise<void>((resolve) => {
+            this.monaies.push({
+              id: monaie.id,
+              monaie: data['monaie'],
+              pays: data['pays'],
+              operateur: data['operateur'],
+              logo: data['logo'],
+              typeMonaie: data['typeMonaie'],
+              priorite: data['priorite']
+            });
+            resolve();
+          });
+          promises.push(promise);
+        }
+      });
+  
+      Promise.all(promises).then(() => {
+        // Trier les devises par priorité après avoir ajouté toutes les devises au tableau
+        this.monaies.sort((a: any, b: any) => a.priorite - b.priorite);
+        console.log(this.monaies);
+      });
+    });
   }
+  
 
   async getNameOfMonaie(id: any): Promise<string | null> {
     try {
@@ -305,7 +353,7 @@ export class DashboardComponent implements OnInit {
   }
 
   errChange: any =""; tauxApplicable: any
-  monaieS: any; monaieR: any; montantMinim: any
+  monaieS: any; monaieR: any; montantMinim: any; montantMax: any
   async calcul() {
     this.errChange = ""
     if (!this.opSend) {
@@ -327,9 +375,6 @@ export class DashboardComponent implements OnInit {
             return;
           }
       
-          console.log('Monnaie émetteur :', this.monaieS);
-          console.log('Monnaie récepteur :', this.monaieR);
-      
           // Récupération du taux de change
           const tauxSnapshot:any = await this.firestore
             .collection('tauxChange', ref => 
@@ -345,10 +390,9 @@ export class DashboardComponent implements OnInit {
             tauxSnapshot.forEach((doc: any) => {
               this.tauxApplicable = doc.data()['taux'];
               this.montantMinim = doc.data()['montantMinim']
-              console.log(this.montantMinim)
+              this.montantMax = doc.data()['montantMax']
             });
-      
-            console.log('Taux applicable :', this.tauxApplicable);
+            
           }
         } catch (error) {
           console.error('Erreur lors de la récupération des données :', error);
@@ -360,25 +404,152 @@ export class DashboardComponent implements OnInit {
     
   }
 
+  logoSender: any; logoReciever: any
   applyTaux(){
-    this.montantRec = ""; this.errChange = ""; this.montantMinim = ""
-    
+    this.montantRec = ""; this.errChange = ""; this.montantMinim = ""; this.montantMax = ""
     
     this.calcul().then(()=>{
       if(this.opSend && this.tauxApplicable && this.montantSend){
-        if(this.montantSend >= this.montantMinim){
-          this.montantRec = this.montantSend * this.tauxApplicable
-        }else{
+        if(this.montantSend < this.montantMinim ){
           this.errChange = "Le montant minimum est de "+ this.montantMinim
-        } 
+        }else if(this.montantSend > this.montantMax){
+          this.errChange = "Le montant maximum est de "+ this.montantMax
+        }else{
+          this.montantRec = this.montantSend * this.tauxApplicable
+        }
         
       }
     })
-    
-    
-      
-    
   }
   
+  isConfirming = false;
+  confirmTransfert() {
+    this.isConfirming = true;
+  }
+
+  cancelConfirm() {
+    this.isConfirming = false;
+  }
+
+  mS: any; mR: any
+  updateOperator(type: string, event: Event) {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedMonaie = this.monaies.find((monaie: any) => monaie.id === selectedValue);
+    if (selectedMonaie) {
+      if (type === 'send') {
+        this.mS = selectedMonaie.operateur+" ("+selectedMonaie.monaie+")";
+        this.logoSender = selectedMonaie.logo
+        console.log(this.logoSender)
+      } else if (type === 'receive') {
+        this.mR = selectedMonaie.operateur+" ("+selectedMonaie.monaie+")";
+        this.logoReciever = selectedMonaie.logo
+      }
+    }
+  }
+
+  nextStep = false
+  bancRMB = "7NZn0gcHASkSocUh7hXs"
+  bancGhana = "ReQ4GVzbW9oe7VNejbtR"
+  bancCameroun="Z4nwSrOzI5sg5FGKfeD7"
+  bancIvoire = "to3Q2WEnJ7GXCuC1UlJF"
+  Alipay ="k9O3cjijn1TBdnua14Dr"
+  usdt = "0F1YtDLX3SFXUqlM0qUk"
+  usdt2 = "QvbrdthSqNmx2LRciIKv"
+  paypal = "DSKROAmrIy56knv6F8YS"
+  mtnE ="1d1Zy17dJSjMY2YfLRVu"
+  orangeE="IbuUrLk48WxegOLOukDU"
+  next() {
+    console.log(this.step);
+    if (this.step === 1) {
+      if (this.opSend && this.opRe && this.montantSend && this.nomR && this.telR) {
+        this.step = 2;
+      } else {
+        alert('Veuillez remplir tous les champs');
+      }
+    }
+  
+    if (this.step === 2) {
+      if (
+        (this.opRe === this.bancRMB || this.opRe === this.bancGhana || this.opRe === this.bancCameroun || this.opRe === this.bancIvoire) &&
+        (!this.nomCompte || !this.numeroCarte || !this.nomBanque)
+      ) {
+        alert('Remplissez tous les champs pour le transfert bancaire');
+      } else if (this.opRe === this.Alipay && (!this.numeroAlipay || !this.nomCompletAlipay || !this.codeQrAlipay)) {
+        alert('Veuillez remplir tous les champs pour Alipay');
+      } else if ((this.opRe === this.usdt || this.opRe === this.usdt2) && (!this.adresseUsdt)) {
+        alert('Veuillez remplir tous les champs pour adresse USDT');
+      } else if (this.opRe === this.paypal && (!this.courrierPaypal || !this.nomPaypal || !this.telPaypal)) {
+        alert('Veuillez remplir tous les champs pour PayPal');
+      } else {
+        this.step = 3;
+      }
+    }
+  }
+  
+  previousStep() {
+    if (this.step > 1) {
+      this.step--;
+    }
+  }
+
+  step = 1
+  nomCompte: string = '';
+  numeroCarte: string = '';
+  nomBanque: string = '';
+  numeroAlipay: string = '';
+  nomCompletAlipay: string = '';
+  codeQrAlipay: string = '';
+  adresseUsdt: string = '';
+  courrierPaypal: string = '';
+  nomPaypal: string = '';
+  telPaypal: string = '';
+  resetForm() {
+    this.opRe = "";
+    this.opSend = "";
+    this.montantSend = 0;
+    this.nomR = "";
+    this.telR = "";
+    this.montantRec = 0;
+    this.monaieR = "";
+    this.monaieS = "";
+    this.tauxApplicable = "";
+    this.nomCompte = "";
+    this.numeroCarte = "";
+    this.nomBanque = "";
+    this.numeroAlipay = "";
+    this.nomCompletAlipay = "";
+    this.codeQrAlipay = "";
+    this.step = 1;
+    this.adresseUsdt = ""
+    this.courrierPaypal = ""
+    this.nomPaypal = ""
+    this.telPaypal = ""
+  }
+
+  numE: any = ""; whatE: any = ""; nomTelE: any = ""; 
+  countries: any = [];
+  fetchCountryDialCodes(): void {
+    const url = 'https://restcountries.com/v3.1/all'; // URL de l'API
+
+    this.http.get<any[]>(url).subscribe(
+      (response: any) => {
+        // Traitement de la réponse
+        this.countries = response
+          .map((country: any) => ({
+            country: country.name.common,
+            code: country.idd.root + (country.idd.suffixes ? country.idd.suffixes[0] : ''),
+            flag: country.flags?.svg || country.flags?.png || '', // URL du drapeau
+          }))
+          .sort((a: any, b: any) => a.country.localeCompare(b.country)); // Tri alphabétique
+
+        //console.log(this.countries); // Debug : Affiche les pays triés
+      },
+      (error: any) => {
+        console.error('Erreur lors de la récupération des données :', error);
+      }
+    );
+  }
+
+
 
 }

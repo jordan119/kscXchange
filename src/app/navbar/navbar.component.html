@@ -1,55 +1,51 @@
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #e3f2fd;">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-      <img src="../../assets/logo ksc xchange t.png" class="img-logo">
+      <img src="../../assets/logo ksc xchange t.png" class="img-logo" id="navbarLogo">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleLogoAnimation()">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <button type="button" class="btn-close d-lg-none" aria-label="Close" (click)="closeNav()"></button>
+      <div class="navbar-title d-lg-none">
+        <img src="../../assets/logo ksc xchange t.png" class="img-logo" id="navbarLogoTitle">
+      </div>
       <ul class="navbar-nav w-100">
         <li class="nav-item">
-          <a class="nav-link" (click)="goTo('')">Acceuil</a>
+          <a class="nav-link" (click)="goTo(''); closeNav()">Acceuil</a>
         </li>
-        <!--<li class="nav-item" (click)="goTo('about')">
-          <a class="nav-link">A propos</a>
-        </li>-->
-        <!--<li class="nav-item" (click)="goTo('rate')">
-          <a class="nav-link">Taux de change</a>
-        </li>-->
-        
-        <li class="nav-item" (click)="goTo('contact')">
-          <a class="nav-link">Contact</a>
+        <li class="nav-item">
+          <a class="nav-link" (click)="goTo('contact'); closeNav()">Contact</a>
         </li>
         @if(idUser){
           @if (firstLetterName) {
-            <li class="nav-item" >
-              <button class="btn-connect seeDesc " (click)="goTo('profil')" >
+            <li class="nav-item">
+              <button class="btn-connect seeDesc" (click)="goTo('profil'); closeNav()">
                 <i class="bi bi-person"></i>
-              </button>              
+              </button>
             </li>
           }
-          <li class="nav-item" >
-            <button class="btn-connect seeDesc" (click)="goTo('dash')">
+          <li class="nav-item">
+            <button class="btn-connect seeDesc" (click)="goTo('dash'); closeNav()">
               <i class="bi bi-house-door-fill"></i>
-            </button>              
+            </button>
           </li>
-
+          <li class="nav-item">
+            <button class="btn-connect seeDesc" (click)="disconnect(); closeNav()">
+              <i class="bi bi-box-arrow-left"></i>
+            </button>
+          </li>
         }
-        
         @if(!firstLetterName){
-          <li class="nav-item" (click)="goTo('login')">
-            <a class="nav-link">Se connecter</a>
+          <li class="nav-item">
+            <a class="nav-link" (click)="goTo('login'); closeNav()">Se connecter</a>
           </li>
-          <li class="nav-item" (click)="goTo('inscription')">
-            <a class="nav-link">S'inscrire</a>
+          <li class="nav-item">
+            <a class="nav-link" (click)="goTo('inscription'); closeNav()">S'inscrire</a>
           </li>
+          
         }
-        
-        <div class="d-flex">          
-          
-          
-        </div>
       </ul>
     </div>
   </div>

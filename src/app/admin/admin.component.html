@@ -24,7 +24,7 @@
                         <i class="bi bi-graph-up-arrow"></i>
                         Taux de change
                     </button>
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal3" (click)="getTaux()">Delete <i class="bi bi-trash-fill"></i></button>
+                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal3" (click)="getTaux()">Modifier <i class="bi bi-pencil"></i></button>
                 </div>
             </div>
             <div class="card bg-dark p-2 text-warning text-center shadow" data-bs-toggle="modal" data-bs-target="#exampleModal2">
@@ -55,9 +55,34 @@
                     </button>
                 </div>
             </div>
+            <div class="card bg-dark p-2 text-warning text-center shadow" data-bs-toggle="modal" data-bs-target="#exampleModal5">
+                <h4>Affiliation</h4>
+                <p class="text-white">
+                    Gerer les affiliations! 
+                </p>
+                <div class="d-flex center w-100">
+                    <button class="btn btn-primary position-relative">
+                        <i class="bi bi-chat-dots-fill"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{affiliations.length}}
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="card bg-dark p-2 text-warning text-center shadow">
+                <h4>FAQs</h4>
+                <p class="text-white">
+                    Gerer les FAQs! 
+                </p>
+                <div class="d-flex center w-100">
+                    <button class="btn btn-primary my-1"  data-bs-toggle="modal" data-bs-target="#exampleModal6"><i class="bi bi-plus"></i>Ajouter</button>
+                    <button class="btn btn-warning"  data-bs-toggle="modal" data-bs-target="#exampleModal7"><i class="bi bi-pencil"></i> modifier</button>
+                    
+                </div>
+            </div>
         </div>
     </div>
-    <div class="w-100 p-4 text-white center ">
+    <div class="w-100 p-2 text-white center ">
         <h1 class="text-center text-white bold">
             Transfert en cour.. 
             <button type="button" class="btn btn-primary position-relative">
@@ -68,35 +93,37 @@
                 </span>
             </button>
         </h1>
-        <table class="table table-dark table-striped text-white w-100 mt-4">
-            <thead>
-                <tr>
-                    <th scope="col">Numéro</th>
-                    <th scope="col">Telephone</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Etat</th>
-                    <th scope="col">Montant</th>
-                    <th scope="col"  class="text-center">Option</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (transfert of transferts; track $index) {
+        <div class="t-contain">
+            <table class="table table-responsive table-dark table-striped text-white w-100 mt-4">
+                <thead>
                     <tr>
-                        <th scope="row">{{transfert.num}}</th>
-                        <td>{{transfert.tel}}</td>
-                        <td>{{transfert.date}}</td>                        
-                        <td><span class="badge bg-{{transfert.couleur}}">{{transfert.etat}}</span></td>
-                        <td>{{transfert.montant}}</td>
-                        <td class="text-center">
-                            <button class="btn btn-primary mx-2 " (click)="modifier(transfert)" data-bs-toggle="modal" data-bs-target="#staticBackdrop4"><i class="bi bi-pencil-fill"></i></button>
-                            <button class="btn btn-danger mx-2" (click)="annulerTrans(transfert.id)"><i class="bi bi-trash"></i></button>
-                            <button class="btn btn-success mx-2" (click)="writeToWhat(transfert.tel)"><i class="bi bi-whatsapp"></i></button>        
-                        </td>
-                    </tr>   
-                }
-                         
-            </tbody>
-        </table>
+                        <th scope="col">Numéro</th>
+                        <th scope="col">Telephone</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Etat</th>
+                        <th scope="col">Montant</th>
+                        <th scope="col"  class="text-center">Option</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (transfert of transferts; track $index) {
+                        <tr>
+                            <th scope="row">{{$index}}</th>
+                            <td>{{transfert.tel}}</td>
+                            <td>{{transfert.date}}</td>                        
+                            <td><span class="badge bg-{{transfert.couleur}}">{{transfert.etat}}</span></td>
+                            <td>{{transfert.montant}}</td>
+                            <td class="text-center">
+                                <button class="btn btn-primary mx-2 " (click)="modifier(transfert)" data-bs-toggle="modal" data-bs-target="#staticBackdrop4"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn btn-danger mx-2" (click)="annulerTrans(transfert.id)"><i class="bi bi-trash"></i></button>
+                                <button class="btn btn-success mx-2" (click)="writeToWhat(transfert.tel)"><i class="bi bi-whatsapp"></i></button>        
+                            </td>
+                        </tr>   
+                    }
+                            
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -124,6 +151,24 @@
                 <div class="mb-3">
                     <label class="form-label">Opérateur(ex : Orange money)</label>
                     <input type="text" class="form-control" [(ngModel)]="operateur">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Type <span class="text-danger">*</span></label>
+                    <select class="form-select" [(ngModel)]="typeMonaie">
+                        <option value="emetteur">Émetteur</option>
+                        <option value="recepteur">Récepteur</option>
+                        <option value="all">emetteur et recepteur</option>
+                        <option value="invisible">Masquer</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Priorité <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" [(ngModel)]="priorite" min="1" max="3">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Photo <span class="text-danger">*</span></label>
+                    <input class="form-control" type="file" [(ngModel)]="photoDevise" (ngModelChange)="onFileSelected($event)" accept="image/*">
+                    
                 </div>
             </div>
             <div class="modal-footer">
@@ -171,7 +216,24 @@
                 <div class="mb-3">
                     <label class="form-label">Operateur</label>
                     <input type="text" class="form-control" [(ngModel)]="operateur">
-                </div>               
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Type <span class="text-danger">*</span></label>
+                    <select class="form-select" [(ngModel)]="typeMonaie">
+                        <option value="emetteur">Émetteur</option>
+                        <option value="recepteur">Récepteur</option>
+                        <option value="all">Émetteur et Récepteur</option>
+                        <option value="invisible">Masquer</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Priorité <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" [(ngModel)]="priorite">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Photo <span class="text-danger">*</span></label>
+                    <input class="form-control" type="file" [(ngModel)]="photoDevise" (ngModelChange)="onFileSelected($event)" accept="image/*">
+                </div>              
                 <div class="p-4 text-center">
                     <button class="btn btn-success w-75" (click)="saveMonaie(toUp)" [disabled]="isSaved">
                         Enregistrer
@@ -190,6 +252,8 @@
                                 <th scope="col">Pays</th>
                                 <th scope="col">Monaie</th>
                                 <th scope="col">Opérateur</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Priorite</th>
                                 <th scope="col">Option</th>
                             </tr>
                         </thead>
@@ -199,7 +263,8 @@
                                     <td>{{monaie.pays}}</td>
                                     <td>{{monaie.monaie}}</td>
                                     <td>{{monaie.operateur}}</td>
-                                    
+                                    <td>{{monaie.typeMonaie}}</td>
+                                    <td>{{monaie.priorite}}</td>
                                     <td>
                                         <button class="btn btn-info mx-1" (click)="setMonaie(monaie)">
                                             <i class="bi bi-pencil"></i>
@@ -259,6 +324,10 @@
                     <label class="form-label fs-5">Montant minimum</label>
                     <input type="number" class="form-control" [(ngModel)]="montantMinim">
                 </div>
+                <div class=" mb-3">
+                    <label class="form-label fs-5">Montant maximum</label>
+                    <input type="number" class="form-control" [(ngModel)]="montantMax">
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="closeModal" data-bs-dismiss="modal">Fermer</button>
@@ -267,76 +336,73 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade modal-xl" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content msg-list m-0">            
-            <div class="modal-body m-0 p-0">
-                <div class="list">
-                    <div class="w-100 center p-2">
-                        <div class="logo">KSC</div>
-                    </div>                    
-                    <ul class="list-group">
-                        <div class="pt-2"></div>
-                        @for (msg of messages; track $index) {
-                            <li (click)="listOf(msg.idUser)">
-                                <div class="contain">
-                                    <div class="tete">
-                                        <div class="nom">{{msg.tel}}</div>
-                                        <div class="heure">{{msg.date}}</div>
-                                    </div>
-
-                                    <p class="text-dark-50">{{msg.msg}}</p>
-                                </div>
-                            </li>     
-                        }
-                                           
-                    </ul>
+  <div class="modal-dialog">
+    <div class="modal-content msg-list m-0">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title" id="exampleModalLabel">Messagerie</h5>
+        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body m-0 p-0">
+        <div class="list">
+          <div class="w-100 center p-2">
+            <div class="logo">KSC</div>
+          </div>
+          <ul class="list-group">
+            <div class="pt-2"></div>
+            @for (msg of messages; track $index) {
+              <li (click)="listOf(msg.idUser); openBody()">
+                <div class="contain">
+                  <div class="tete">
+                    <div class="nom">{{msg.tel}}</div>
+                    <div class="heure">{{msg.date}}</div>
+                  </div>
+                  <p class="text-dark-50">{{msg.msg}}</p>
                 </div>
-                <div class="body-msg">
-                    <div class="w-100 shadow p-3 d-flex justify-content-between">
-                        <div>
-                            <h5 class="m-0">KscXchange</h5>
-                            @if(msgOf.length > 0){<span class="text-sm text-dark-50">to {{nomOf}}</span>}
-                        </div>
-                        <div>
-                            <button class="btn btn-outline-info"  data-bs-dismiss="modal"><i class="bi bi-x-lg"></i></button>
-                        </div>                      
-                    </div>
-                    <div class="w-100 p-2 text-sm msg-box-contain border-2">
-                        @if (messages.length ==0) {
-                        
-                        }@else {
-                            @for (msg of msgOf; track $index) {
-                                @if (msg.admin == true) {
-                                    <div class="receiver">
-                                        <div class="msg-box">
-                                            {{msg.msg}}
-                                        </div>
-                                                                          
-                                    </div>
-                                }@else {
-                                    <div class="sender">
-                                        <div class="msg-box">
-                                            {{msg.msg}}
-                                        </div>
-                                         
-                                    </div>
-                                } 
-                            }
-                        }
-                    </div>
-                    <div class="footer w-100 shadow-lg">
-                        <div class="msb-reply w-100 position-relative">
-                            <textarea class="border-0" placeholder="What's on your mind..." [(ngModel)]="msg"></textarea>
-                            <button class="btn btn-success" (click)="sendMsg()" [disabled]="isSending || !msg "><i class="bi bi-send-fill"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
+              </li>
+            }
+          </ul>
         </div>
+        <div class="body-msg">
+          <div class="w-100 shadow p-3 d-flex justify-content-between">
+            <div>
+              <h5 class="m-0">KscXchange</h5>
+              @if(msgOf.length > 0){<span class="text-sm text-dark-50">to {{nomOf}}</span>}
+            </div>
+            <div>
+              <button class="btn btn-outline-info" (click)="closeBody()"><i class="bi bi-arrow-left"></i> Retour</button>
+            </div>
+          </div>
+          <div class="w-100 p-2 text-sm msg-box-contain border-2">
+            @if (messages.length == 0) {
+            } @else {
+              @for (msg of msgOf; track $index) {
+                @if (msg.admin == true) {
+                  <div class="receiver">
+                    <div class="msg-box">
+                      {{msg.msg}}
+                    </div>
+                  </div>
+                } @else {
+                  <div class="sender">
+                    <div class="msg-box">
+                      {{msg.msg}}
+                    </div>
+                  </div>
+                }
+              }
+            }
+          </div>
+          <div class="footer w-100 shadow-lg">
+            <div class="msb-reply w-100 position-relative">
+              <textarea class="border-0" placeholder="What's on your mind..." [(ngModel)]="msg"></textarea>
+              <button class="btn btn-success" (click)="sendMsg()" [disabled]="isSending || !msg"><i class="bi bi-send-fill"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="modal fade modal-xl" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -348,14 +414,53 @@
             </div>            
             <div class="modal-body">
                 <div class="w-100">
+                    <div class="my-2">
+                        <div class=" mb-3">
+                            <label class="form-label fs-5">Device source</label>
+                            <select class="form-select"  [(ngModel)]="currencyCode">
+                                @for (devise of monaies; track $index) {
+                                    <option value="{{devise.id}}">{{devise.monaie +', '+devise.operateur+' ('+devise.pays+')'}}</option>
+                                }
+                            </select>
+                        </div>
+                        <div class=" mb-3">
+                            <label class="form-label fs-5">Device recepteur</label>
+                            <select class="form-select"  [(ngModel)]="currencyCodeRecept">
+                                @for (devise of monaies; track $index) {
+                                    <option value="{{devise.id}}">{{devise.monaie +', '+devise.operateur+' ('+devise.pays+')'}}</option>
+                                }
+                            </select>
+                        </div>
+                        <div class=" mb-3">
+                            <label class="form-label fs-5">Taux de change</label>
+                            <input type="number" class="form-control" [(ngModel)]="tauxChange">
+                        </div>
+                        <div class=" mb-3">
+                            <label class="form-label fs-5">Montant minimum</label>
+                            <input type="number" class="form-control" [(ngModel)]="montantMinim">
+                        </div>
+                        <div class=" mb-3">
+                            <label class="form-label fs-5">Montant maximum</label>
+                            <input type="number" class="form-control" [(ngModel)]="montantMax">
+                        </div>
+
+                        <button class="btn btn-success w-100" (click)="modifierTaux()" [disabled]="isSaved">
+                            Modifier
+                        </button>
+                    </div>
                     <h4>Vos taux de change</h4>
+
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Rechercher un sender ou un reciever" [(ngModel)]="search" (input)="searchTaux()">
+                        <button class="search-button" (click)="searchTaux()"><i class="bi bi-search"></i></button>
+                    </div>
                     <table class="table table-dark table-striped">
                         <thead>
                             <tr>
-                            <th scope="col">Sender</th>
-                            <th scope="col">Reciever</th>
-                            <th scope="col">Taux de change</th>
-                            <th scope="col">Action</th>
+                                <th scope="col">Sender</th>
+                                <th scope="col">Reciever</th>
+                                <th scope="col">Taux de change</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -365,6 +470,7 @@
                                     <td>{{tc.reciever}}</td>
                                     <td>{{tc.taux}}</td>
                                     <td>
+                                        <button class="btn btn-success mx-1 btn-sm" (click)="setTaux(tc)"><i class="bi bi-pencil"></i></button>
                                         <button class="btn btn-danger mx-1 btn-sm" (click)="deleteTaux(tc.id)"><i class="bi bi-trash"></i></button>
                                     </td>
                                 </tr>
@@ -377,8 +483,7 @@
         </div>
     </div>
 </div>
-
-<div class="modal  fade" id="staticBackdrop4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal modal-xl fade" id="staticBackdrop4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-info">
@@ -387,18 +492,66 @@
             </div>
             <div class="modal-body">
                 <div class="w-100 mb-3 text-center">
-                    <h5>transfert numero {{numTrans}} </h5>
+                    <h5 class="text-success">Transfert numéro {{numTrans}} </h5>
                     <h6>Date: {{dateTrans}}</h6>
                     <h6>Status: {{etatTrans}}</h6>
                 </div>
-                <div class=" mb-3">
-                    <label class="form-label fs-5">Changer le Statut de ce tranfert</label>
-                    <select class="form-select"  [(ngModel)]="status">                        
+                <div class="mb-3">
+                    <label class="form-label fs-5">Changer le Statut de ce transfert</label>
+                    <select class="form-select" [(ngModel)]="status">                        
                         <option value="en cour">En cour</option>      
                         <option value="success">Succès</option>
                         <option value="echec">Echec</option>                    
                     </select>
                 </div>
+
+                <h4 class="text-success my-4">Détail du transfert</h4>
+                <div class="d-flex mb-3">
+                    <span><strong>Montant envoyé:</strong> </span>
+                    <span>&nbsp;{{montantEnvoye}}</span>
+                </div>
+                <div class="d-flex mb-3">
+                    <span><strong>Montant reçu:</strong> </span>
+                    <span>&nbsp;{{montantRecu}}</span>
+                </div>
+                <h5 class="text-success my-4">Informations sur le recepteur</h5>
+                <div class="d-flex mb-3">
+                    <span><strong>Nom du récepteur: </strong></span>
+                    <span>&nbsp;{{nomRecepteur}}</span>
+                  </div>
+                  <div class="d-flex mb-3">
+                    <span><strong>Numéro de téléphone du récepteur: </strong></span>
+                    <span>&nbsp;{{telRecepteur}}</span>
+                  </div>
+                <h5 class="text-success my-4">Information sur l'expediteur</h5>
+                <div class="d-flex mb-3">
+                    <span><strong> Numéro de l'expéditeur:</strong> </span>
+                    <span>&nbsp;{{numE}}</span>
+                </div>
+                <div class="d-flex mb-3">
+                    <span><strong>WhatsApp de l'expéditeur:</strong> </span>
+                    <span>&nbsp;{{whatE}}</span>
+                </div>
+                <div class="d-flex mb-3">
+                    <span><strong>Nom lié au numéro de l'expéditeur: </strong></span>
+                    <span>&nbsp;{{nomTelE}}</span>
+                </div>
+                @if (nomBanque) {
+                    <h5 class="text-success my-4">Information sur le compte bancaire</h5>
+                    <div class="d-flex mb-3">
+                        <span><strong>Nom de la banque:</strong> </span>
+                        <span>&nbsp;{{nomBanque}}</span>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <span><strong>Numéro de compte:</strong> </span>
+                        <span>&nbsp;{{numeroCarte}}</span>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <span><strong>Nom du compte:</strong> </span>
+                        <span>&nbsp;{{nomCompte}}</span>
+                    </div>
+                }
+                
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="closeModal" data-bs-dismiss="modal">Fermer</button>
@@ -407,12 +560,48 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade modal-xl" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content msg-list m-0">
             <div class="modal-header bg-info">
                 <h5 class="modal-title" id="staticBackdropLabel">Gérer les vérifications</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>            
+            <div class="modal-body">
+                <div class="w-100">
+                    <h4>Utilisateurs</h4>
+                    <table class="table table-dark table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Téléphone</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Points</th>
+                                <th scope="col">Code d'affiliation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (profile of profiles; track $index) {
+                                <tr>
+                                    <td>{{profile.nom}}</td>
+                                    <td>{{profile.tel}}</td>
+                                    <td>{{profile.email}}</td>
+                                    <td>{{profile.points}}</td>
+                                    <td>{{profile.affCode}}</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-xl" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content msg-list m-0">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="staticBackdropLabel">Gérer les affiliations</h5>
                 <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>            
             <div class="modal-body">
@@ -423,20 +612,20 @@
                             <tr>
                                 <th scope="col">Nom</th>
                                 <th scope="col">Telephone</th>
-                                <th scope="col">email</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">Affiliations</th>
+                                <!--<th scope="col">Action</th>-->
                             </tr>
                         </thead>
                         <tbody>
-                            @for (tc of verifications; track $index) {
+                            @for (tc of affiliations; track $index) {
                                 <tr class="pointer">
                                     <th scope="row">{{tc.nom}}</th>
                                     <td>{{tc.telephone}}</td>
-                                    <td>{{tc.email}}</td>
-                                    <td>
+                                    <td>{{tc.points}}</td>
+                                    <!--<td>
                                         <button class="btn btn-danger mx-1 btn-sm" (click)="deleteTaux(tc.id)"><i class="bi bi-pencil"></i></button>
                                         <button class="btn btn-danger mx-1 btn-sm" (click)="deleteTaux(tc.id)"><i class="bi bi-trash"></i></button>
-                                    </td>
+                                    </td>-->
                                 </tr>
                             }                            
                         </tbody>
@@ -444,6 +633,78 @@
                 </div>                
             </div>
             
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-xl" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content msg-list m-0">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="staticBackdropLabel">Gérer les FAQs</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>            
+            <div class="modal-body">
+                <div class="w-100">
+                    <div class="mb-3">
+                        <label class="label-form">Questions</label>
+                        <input type="text" class="form-control" [(ngModel)]="question">
+                    </div>
+                    <div class="mb-3">
+                        <label class="label-form">Réponse</label>
+                        <textarea class="form-control" [(ngModel)]="reponse" rows="4"></textarea> 
+                    </div>
+                    <button class="btn btn-success w-100" (click)="addFaqs()">Ajouter</button>
+                </div>                
+            </div>
+            
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-xl" id="exampleModal7" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content msg-list m-0">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="staticBackdropLabel">Modifier les FAQs</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>            
+            <div class="modal-body d-block">
+                <div class="w-100">
+                    <div class="mb-3">
+                        <label class="label-form">Questions</label>
+                        <input type="text" class="form-control" [(ngModel)]="question">
+                    </div>
+                    <div class="mb-3">
+                        <label class="label-form">Réponse</label>
+                        <textarea class="form-control" [(ngModel)]="reponse" rows="4"></textarea> 
+                    </div>
+                    <button class="btn btn-success w-100" (click)="updateFaq()">Modifier</button>
+                </div>                
+                <div class="w-100 mt-4">
+                    <h4>Vos FAQs</h4>
+                    <table class="table table-dark table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Question</th>
+                                <!--<th scope="col">Réponse</th>-->
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (faq of faqs; track $index) {
+                                <tr class="pointer">
+                                    <th scope="row">{{faq.question}}</th>
+                                    <!--<td>{{faq.reponse}}</td>-->
+                                    <td>
+                                        <button class="btn btn-info mx-1" (click)="editFaq(faq)"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-danger mx-1" (click)="deleteFaq(faq.id)"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

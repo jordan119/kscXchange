@@ -50,12 +50,23 @@ export class ProfileComponent implements OnInit{
       prenom: this.prenom,
       tel: this.tel,
       username: this.username,
-      adresse: this.adresse
+      adresse: this.adresse,
+      affCode: this.affCode
     }).then(()=>{
       this.isUpdating = false
       alert('modification réussie')
     })
   }
+
+  deleteProfile(){
+    this.firestore.collection('profiles').doc(this.idProfile).delete().then(()=>{
+      alert('compte supprimé')
+      this.Auth.signOut().then(()=>{
+        this.router.navigate(['/acceuil'])
+      })
+    })
+  }
+  
   getProfile(){
     this.firestore.collection('profiles', ref=>ref.where('idUser', '==', this.idUser)).get().subscribe(profiles=>{
       profiles.forEach((profile: any)=>{
@@ -65,10 +76,13 @@ export class ProfileComponent implements OnInit{
         this.prenom = profile.data()['prenom'],
         this.nom = profile.data()['nom'],
         this.username = profile.data()['username'],
-        this.adresse = profile.data()['adresse']
+        this.adresse = profile.data()['adresse'],
+        this.affCode = profile.data()['affCode']
+        this.generateAffLink()
       })
     })
   }
+
   nom: any; prenom: any; email: any; 
   username: any; adresse : any; tel: any
   option: any = false
@@ -88,8 +102,26 @@ export class ProfileComponent implements OnInit{
   selfie: any; idPiece: any; rectoId: any; verseauId: any
   etatI = "active"; etatV = "active"
   sendToVerif(){
-
+    
   }
 
-
+  affLink: any=""; affCode: any
+  generateAffLink() {
+    if (this.affCode) {
+      const baseUrl = 'https://kscchange-9333b.web.app/inscription'; // Remplacez par l'URL de votre site
+      this.affLink = `${baseUrl}?affCode=${this.affCode}`;
+      
+      console.log('Generated AffLink:', this.affLink);
+    }
+  }
+  
+  copyAffLink() {
+    const inputElement = document.createElement('input');
+    inputElement.setAttribute('value', this.affLink);
+    document.body.appendChild(inputElement);
+    inputElement.select();
+    document.execCommand('copy');
+    document.body.removeChild(inputElement);
+    alert('Lien d\'affiliation copié dans le presse-papiers');
+  }
 }

@@ -46,6 +46,17 @@
                             <input type="text" class="form-control" [(ngModel)]="tel">
                         </div>
                     </div>
+                    <div class="col mb-3">
+                        <label class="form-label">Votre code d'affiliation<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" [(ngModel)]="affCode">
+                    </div>
+                    <div class="col mb-3">
+                        <label class="form-label">Votre lien d'affiliation</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" [(ngModel)]="affLink" readonly disabled>
+                            <button class="btn btn-outline-secondary" type="button" (click)="copyAffLink()">Copier</button>
+                        </div>
+                    </div>
                     <div class="form-floating mb-3">
                         <textarea class="form-control" placeholder="saisir votre adresse" style="height: 100px" [(ngModel)]="adresse"></textarea>
                         <label class="form-label text-dark">Votre adresse</label>
